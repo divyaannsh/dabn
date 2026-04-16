@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   ChevronRight, 
@@ -32,7 +32,7 @@ const COMPRESSOR_DATA = {
     { "danfoss": { "model": "HLP075T2LC6", "tr": 6, "w": "21,102", "btu": "72,000", "dimensions": "224 × 224 × 480", "code": "121L3098" }, "copeland": { "model": "ZR72K-TF5", "tr": 6, "w": "21,100", "btu": "72,000", "dimensions": "254×254×460" } },
     { "danfoss": { "model": "HLP081T2LC6", "tr": 7, "w": "24,619", "btu": "84,000", "dimensions": "224 × 224 × 490", "code": "121L1916" }, "copeland": { "model": "ZR81KC-TF5", "tr": 6.8, "w": "24,000", "btu": "81,000", "dimensions": "254×254×470" } },
     { "danfoss": { "model": "HCP094T2LC6", "tr": 8, "w": "28,136", "btu": "96,000", "dimensions": "254 × 254 × 500", "code": "HCP094T2LC6" }, "copeland": { "model": "ZR94KC-TF5", "tr": 7.8, "w": "27,500", "btu": "94,000", "dimensions": "254×254×480" } },
-    { "danfoss": { "model": "HCP120T2LC6", "tr": 10, "w": "35,170", "btu": "1,20,000", "dimensions": "280 × 280 × 530", "code": "121L0766" }, "copeland": { "model": "ZR125KC / ZR12M3", "tr": "10.4–10.5", "w": "36,600-37,000", "btu": "1,25,000-1,26,000", "dimensions": "280×280×530" } },
+    { "danfoss": { "model": "HCP120T2LC6", "tr": 10, "w": "35,170", "btu": "1,20,000", "dimensions": "280 × 280 × 530", "code": "121L0766" }, "copeland": { "model": "ZR125KC / ZR12M3", "tr": "10.4–10.5", "w": "36,600-37,000", "btu": "125,000-126,000", "dimensions": "280×280×530" } },
     { "danfoss": { "model": "HRP047T4LP6", "tr": 4, "w": "1,20,000", "btu": "1,20,000", "dimensions": "185 × 185 × 450", "code": "121L1046" }, "copeland": { "model": "ZR47K-TFD", "tr": 4, "w": "14,000", "btu": "47,000", "dimensions": "246×246×430" } },
     { "danfoss": { "model": "HRP054T4LP6", "tr": 4.5, "w": "15,827", "btu": "54,000", "dimensions": "185 × 185 × 460", "code": "121L1691" }, "copeland": { "model": "ZR54K-TFD", "tr": 4.5, "w": "15,800", "btu": "54,000", "dimensions": "246×246×440" } },
     { "danfoss": { "model": "HRP060T4LP6", "tr": 5, "w": "17,585", "btu": "60,000", "dimensions": "185 × 185 × 460", "code": "121L1726" }, "copeland": { "model": "ZR57K / ZR61K (TFD)", "tr": "4.8–5.1", "w": "16,700-17,900", "btu": "57,000-61,000", "dimensions": "246×246×440" } },
@@ -64,11 +64,11 @@ const COMPRESSOR_DATA = {
     { "danfoss": { "model": "MLZ026", "tr": 1.7, "w": "5900", "btu": "20,400", "dimensions": "430 × 185 mm", "code": "MLZ026T4LP9" }, "copeland": { "model": "ZB26KCE-TFD", "tr": 1.7, "w": "5840", "btu": "20,400", "dimensions": "406x243x244" } },
     { "danfoss": { "model": "MLZ030", "tr": 1.9, "w": "6700", "btu": "22,800", "dimensions": "455 × 190 mm", "code": "MLZ030T4LP9" }, "copeland": { "model": "ZB29KCE-TFD", "tr": 1.9, "w": "6620", "btu": "22,800", "dimensions": "423x246x246" } },
     { "danfoss": { "model": "MLZ038", "tr": 2.4, "w": "8600", "btu": "28,800", "dimensions": "480 × 200 mm", "code": "MLZ038T4LP9" }, "copeland": { "model": "ZB38KCE-TFD", "tr": 2.4, "w": "8530", "btu": "28,800", "dimensions": "438x242x242" } },
-    { "danfoss": { "model": "MLZ045", "tr": 2.9, "w": "10,200", "btu": "34,800", "dimensions": "520 × 210 mm", "code": "MLZ045T4LP9" }, "copeland": { "model": "ZB45KCE-TFD", "tr": 3.4, "w": "11,900", "btu": "40,800", "dimensions": "438-458x242x242" } },
-    { "danfoss": { "model": "MLZ048", "tr": 3.3, "w": "11,700", "btu": "39,600", "dimensions": "540 × 215 mm", "code": "MLZ048T4LP9" }, "copeland": { "model": "ZB48KCE-TFD", "tr": 3.3, "w": "11,650", "btu": "39,600", "dimensions": "480x246x284" } },
-    { "danfoss": { "model": "MLZ058", "tr": 3.8, "w": "13,400", "btu": "45,600", "dimensions": "580 × 230 mm", "code": "MLZ058T4LP9" }, "copeland": { "model": "ZB57KCE-TFD", "tr": 3.8, "w": "13,200", "btu": "45,600", "dimensions": "442x246-263x256-263" } },
-    { "danfoss": { "model": "MLZ066", "tr": 4.4, "w": "15,600", "btu": "52,800", "dimensions": "620 × 250 mm", "code": "MLZ066T4LP9" }, "copeland": { "model": "ZB66KCE-TFD", "tr": 4.3, "w": "15,100", "btu": "51,600", "dimensions": "534x280x280" } },
-    { "danfoss": { "model": "MLZ076", "tr": 5.2, "w": "18,400", "btu": "62,400", "dimensions": "650 × 260 mm", "code": "MLZ076T4LP9" }, "copeland": { "model": "ZB76KCE-TFD", "tr": 5.1, "w": "17,850", "btu": "61,200", "dimensions": "534x280x280" } }
+    { "danfoss": { "model": "MLZ045", "tr": 2.9, "w": "10,200", "btu": "34,800", "dimensions": "520 × 210 mm", "code": "MLZ045T4LP9" }, "copeland": { "model": "ZB45KCE-TFD", "tr": 3.4, "w": "11900", "btu": "40,800", "dimensions": "438-458x242x242" } },
+    { "danfoss": { "model": "MLZ048", "tr": 3.3, "w": "11700", "btu": "39,600", "dimensions": "540 × 215 mm", "code": "MLZ048T4LP9" }, "copeland": { "model": "ZB48KCE-TFD", "tr": 3.3, "w": "11650", "btu": "39,600", "dimensions": "480x246x284" } },
+    { "danfoss": { "model": "MLZ058", "tr": 3.8, "w": "13400", "btu": "45,600", "dimensions": "580 × 230 mm", "code": "MLZ058T4LP9" }, "copeland": { "model": "ZB57KCE-TFD", "tr": 3.8, "w": "13200", "btu": "45,600", "dimensions": "442x246-263x256-263" } },
+    { "danfoss": { "model": "MLZ066", "tr": 4.4, "w": "15600", "btu": "52,800", "dimensions": "620 × 250 mm", "code": "MLZ066T4LP9" }, "copeland": { "model": "ZB66KCE-TFD", "tr": 4.3, "w": "15100", "btu": "51600", "dimensions": "534x280x280" } },
+    { "danfoss": { "model": "MLZ076", "tr": 5.2, "w": "18400", "btu": "62400", "dimensions": "650 × 260 mm", "code": "MLZ076T4LP9" }, "copeland": { "model": "ZB76KCE-TFD", "tr": 5.1, "w": "17850", "btu": "61200", "dimensions": "534x280x280" } }
   ],
   "DSH": [
     { "hz": 50, "danfoss": { "model": "DSH090A4AL", "tr": 7.5, "w": "20,048", "btu": "68,402", "dimensions": "485 X 230 X 243", "code": "DSH090A4AL" }, "copeland": { "model": "ZP90KCE-TFD", "tr": 7.5, "w": "-", "btu": "-", "dimensions": "533 x 501 x 242" } },
@@ -102,42 +102,6 @@ const COMPRESSOR_DATA = {
   ]
 };
 
-const Card = ({ children, className = "" }) => (
-  <div className={`bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden ${className}`}>
-    {children}
-  </div>
-);
-
-const Badge = ({ children, variant = "red" }) => {
-  const variants = {
-    red: "bg-red-50 text-red-700 border-red-100",
-    blue: "bg-blue-50 text-blue-700 border-blue-100",
-    green: "bg-green-50 text-green-700 border-green-100",
-    amber: "bg-amber-50 text-amber-700 border-amber-100",
-    slate: "bg-slate-50 text-slate-700 border-slate-100",
-  };
-  return (
-    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${variants[variant]}`}>
-      {children}
-    </span>
-  );
-};
-
-const ComparisonRow = ({ label, danfossValue, copelandValue, icon: Icon, isSubHeader = false }) => (
-  <div className={`grid grid-cols-12 py-2 border-b border-slate-200 last:border-0 hover:bg-slate-50/50 transition-colors px-4 ${isSubHeader ? "bg-slate-100/50 font-bold" : ""}`}>
-    <div className="col-span-4 flex items-center gap-2">
-      {Icon && <Icon className="w-3.5 h-3.5 text-slate-400" />}
-      <span className={`text-xs ${isSubHeader ? "text-slate-700" : "text-slate-500 font-medium"}`}>{label}</span>
-    </div>
-    <div className={`col-span-4 text-xs px-2 border-l border-slate-100 ${isSubHeader ? "text-slate-900" : "text-red-700 font-semibold"}`}>
-      {danfossValue || <span className="text-slate-300 italic">-</span>}
-    </div>
-    <div className={`col-span-4 text-xs px-2 border-l border-slate-100 ${isSubHeader ? "text-slate-900" : "text-slate-600 font-medium"}`}>
-      {copelandValue || <span className="text-slate-300 italic">-</span>}
-    </div>
-  </div>
-);
-
 const SERIES_INSIGHTS = {
   "H series": {
     summary: "Optimized for high-ambient residential and light commercial air conditioning.",
@@ -166,10 +130,66 @@ const SERIES_INSIGHTS = {
   }
 };
 
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = "red", className = "" }) => {
+  const variants = {
+    red: "bg-red-50 text-red-700 border-red-100",
+    blue: "bg-blue-50 text-blue-700 border-blue-100",
+    green: "bg-green-50 text-green-700 border-green-100",
+    amber: "bg-amber-50 text-amber-700 border-amber-100",
+    slate: "bg-slate-50 text-slate-700 border-slate-100",
+  };
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${variants[variant]} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+const ComparisonRow = ({ label, danfossValue, copelandValue, icon: Icon, isSubHeader = false, isBetter = null, explanation = null }) => (
+  <div className="group relative">
+    <div className={`grid grid-cols-12 py-2 border-b border-slate-200 last:border-0 hover:bg-slate-50/50 transition-colors px-4 ${isSubHeader ? "bg-slate-100/50 font-bold" : ""}`}>
+      <div className="col-span-4 flex items-center gap-2">
+        {Icon && <Icon className="w-3.5 h-3.5 text-slate-400" />}
+        <span className={`text-xs ${isSubHeader ? "text-slate-700" : "text-slate-500 font-medium"}`}>{label}</span>
+      </div>
+      <div className={`col-span-4 text-xs px-2 border-l border-slate-100 flex items-center gap-2 ${isSubHeader ? "text-slate-900" : isBetter === true ? "text-green-600 font-black" : "text-red-700 font-semibold"}`}>
+        {danfossValue || <span className="text-slate-300 italic">-</span>}
+        {isBetter === true && <Zap className="w-3 h-3 fill-green-600 text-green-600" />}
+      </div>
+      <div className={`col-span-4 text-xs px-2 border-l border-slate-100 flex items-center gap-2 ${isSubHeader ? "text-slate-900" : isBetter === false ? "text-green-600 font-black" : "text-slate-600 font-medium"}`}>
+        {copelandValue || <span className="text-slate-300 italic">-</span>}
+        {isBetter === false && <Zap className="w-3 h-3 fill-green-600 text-green-600" />}
+      </div>
+    </div>
+    {explanation && (
+      <motion.div 
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: "auto", opacity: 1 }}
+        className="px-4 pb-2 bg-slate-50/80 overflow-hidden"
+      >
+        <p className="text-[10px] text-slate-400 font-medium italic">💡 {explanation}</p>
+      </motion.div>
+    )}
+  </div>
+);
+
 const App = () => {
   const [activeTab, setActiveTab] = useState("H series");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedModel, setSelectedModel] = useState(null);
+  const [showIntro, setShowIntro] = useState(true);
+  const [explainMode, setExplainMode] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowIntro(false), 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredData = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
@@ -178,7 +198,6 @@ const App = () => {
       return (COMPRESSOR_DATA[activeTab] || []).map(item => ({ ...item, category: activeTab }));
     }
 
-    // Global Search across all categories
     const allData = [];
     Object.entries(COMPRESSOR_DATA).forEach(([category, items]) => {
       items.forEach(item => {
@@ -187,31 +206,83 @@ const App = () => {
     });
 
     return allData.filter(item => {
-      // Search in Danfoss fields
       const danfossMatch = Object.values(item.danfoss || {}).some(val => 
         String(val).toLowerCase().includes(query)
       );
-      
-      // Search in Copeland fields
       const copelandMatch = Object.values(item.copeland || {}).some(val => 
         String(val).toLowerCase().includes(query)
       );
-      
-      // Search in category name
       const categoryMatch = item.category.toLowerCase().includes(query);
-
-      // Search in other top-level fields (like hz)
       const otherMatch = Object.entries(item).some(([key, val]) => 
         key !== 'danfoss' && key !== 'copeland' && key !== 'category' && String(val).toLowerCase().includes(query)
       );
-
       return danfossMatch || copelandMatch || otherMatch || categoryMatch;
     });
   }, [activeTab, searchQuery]);
 
+  useEffect(() => {
+    if (searchQuery && filteredData.length > 0) {
+      setSelectedModel(0);
+    } else if (!searchQuery) {
+      setSelectedModel(null);
+    }
+  }, [searchQuery, filteredData.length]);
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (selectedModel === null && filteredData.length > 0) {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") setSelectedModel(0);
+        return;
+      }
+      if (e.key === "ArrowDown") {
+        setSelectedModel(prev => Math.min(prev + 1, filteredData.length - 1));
+      }
+      if (e.key === "ArrowUp") {
+        setSelectedModel(prev => Math.max(prev - 1, 0));
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedModel, filteredData]);
+
+  const isBetter = (d, c) => {
+    if (!d || !c || d === "-" || c === "-") return null;
+    const parseValue = (val) => {
+      const cleaned = String(val).replace(/,/g, '').split('–')[0].split('-')[0].trim();
+      return parseFloat(cleaned);
+    };
+    const dv = parseValue(d);
+    const cv = parseValue(c);
+    if (isNaN(dv) || isNaN(cv)) return null;
+    return dv > cv;
+  };
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
-      {/* --- Navigation --- */}
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-red-100 selection:text-red-900">
+      <AnimatePresence> 
+        {showIntro && ( 
+          <motion.div 
+            initial={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center" 
+          > 
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              className="text-center"
+            > 
+              <img src="/Outlook-kvcuysmb.png" alt="Danfoss" className="h-16 w-auto mx-auto mb-6" />
+              <h1 className="text-3xl font-black text-red-600"> 
+                Staying Ahead 
+              </h1> 
+              <p className="text-sm text-slate-500 text-center mt-2"> 
+                Engineering Efficiency 
+              </p> 
+            </motion.div> 
+          </motion.div> 
+        )} 
+      </AnimatePresence>
+
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4 group cursor-pointer">
@@ -239,24 +310,39 @@ const App = () => {
             ))}
           </div>
 
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input 
-              type="text"
-              placeholder="Search models..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setSelectedModel(null);
-              }}
-              className="pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-100 rounded-xl text-sm w-48 transition-all outline-none"
-            />
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={() => setExplainMode(!explainMode)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                explainMode 
+                  ? "bg-red-600 text-white border-red-600 shadow-lg shadow-red-200" 
+                  : "bg-white text-slate-500 border-slate-200 hover:border-red-200 hover:text-red-600"
+              }`}
+            >
+              <Info className="w-3.5 h-3.5" />
+              {explainMode ? "Explain Mode ON" : "Explain Mode OFF"}
+            </button>
+
+            <div className="relative">
+              <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${searchQuery ? "text-red-600" : "text-slate-400"}`} />
+              <input 
+                type="text"
+                placeholder="Search models..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setSelectedModel(null);
+                }}
+                className={`pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-100 rounded-xl text-sm w-64 transition-all outline-none ${
+                  searchQuery ? "ring-2 ring-red-200 bg-white" : ""
+                }`}
+              />
+            </div>
           </div>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 py-12">
-        {/* --- Hero Section --- */}
         <section className="mb-16">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div 
@@ -328,7 +414,10 @@ const App = () => {
                         className="h-full bg-red-300"
                       />
                     </div>
-                    <span className="text-xs font-bold">95% Efficiency</span>
+                    <div className="flex flex-col text-right">
+                      <span className="text-xs font-bold">95% Efficiency</span>
+                      <span className="text-[8px] font-black uppercase tracking-tighter text-red-200">High Confidence</span>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -336,7 +425,6 @@ const App = () => {
           </div>
         </section>
 
-        {/* --- Comparison Grid --- */}
         <section className="mb-24">
           <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl overflow-hidden relative">
             <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
@@ -380,215 +468,265 @@ const App = () => {
           </div>
         </section>
 
-        {/* --- Interactive Comparison Grid --- */}
         <section>
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h3 className="text-2xl font-bold text-slate-900">
-                {searchQuery ? "Global Search Results" : `${activeTab} Comparison`}
-              </h3>
-              <p className="text-slate-500 text-sm">
-                {searchQuery ? `Searching across all categories for "${searchQuery}"` : "Select a model to view detailed technical specifications"}
-              </p>
+          <motion.div 
+            key={activeTab} 
+            initial={{ opacity: 0, y: 10 }} 
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-2xl font-bold text-slate-900">
+                  {searchQuery ? "Global Search Results" : `${activeTab} Comparison`}
+                </h3>
+                <p className="text-slate-500 text-sm">
+                  {searchQuery ? `Searching across all categories for "${searchQuery}"` : "Select a model to view detailed technical specifications"}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                <Filter className="w-4 h-4" />
+                <span>{filteredData.length} Models Found</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
-              <Filter className="w-4 h-4" />
-              <span>{filteredData.length} Models Found</span>
-            </div>
-          </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* List View */}
-            <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
-              <AnimatePresence mode="popLayout">
-                {filteredData.map((item, idx) => {
-                  const modelName = item.danfoss?.model || item.danfoss?.mt || "N/A";
-                  const isSelected = selectedModel === idx;
-                  return (
-                    <motion.div
-                      layout
-                      key={modelName + idx}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      onClick={() => setSelectedModel(idx)}
-                      className={`group p-4 rounded-xl cursor-pointer transition-all border-2 ${
-                        isSelected 
-                          ? "bg-white border-red-600 shadow-md ring-4 ring-red-50" 
-                          : "bg-white border-transparent hover:border-slate-200 shadow-sm hover:shadow-md"
-                      }`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                            isSelected ? "bg-red-600 text-white" : "bg-red-50 text-red-600"
-                          }`}>
-                            <Maximize2 className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <p className={`font-bold text-sm ${isSelected ? "text-slate-900" : "text-slate-700"}`}>
-                              {modelName}
-                            </p>
-                            <div className="flex flex-col gap-0.5 mt-0.5">
-                              <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">
-                                Capacity: {item.danfoss?.tr || item.danfoss?.capacity} TR
+            <div className="grid lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
+                <AnimatePresence mode="popLayout">
+                  {filteredData.map((item, idx) => {
+                    const modelName = item.danfoss?.model || item.danfoss?.mt || "N/A";
+                    const isSelected = selectedModel === idx;
+                    return (
+                      <motion.div
+                        layout
+                        key={modelName + idx}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        onClick={() => setSelectedModel(idx)}
+                        onMouseEnter={() => setSelectedModel(idx)}
+                        className={`group p-4 rounded-xl cursor-pointer transition-all border-2 ${
+                          isSelected 
+                            ? "bg-white border-red-600 shadow-md ring-4 ring-red-50" 
+                            : "bg-white border-transparent hover:border-slate-200 shadow-sm hover:shadow-md"
+                        }`}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                              isSelected ? "bg-red-600 text-white" : "bg-red-50 text-red-600"
+                            }`}>
+                              <Maximize2 className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <p className={`font-bold text-sm ${isSelected ? "text-slate-900" : "text-slate-700"}`}>
+                                {modelName}
                               </p>
-                              {searchQuery && (
-                                <p className="text-[9px] text-red-500/80 font-black tracking-tighter uppercase italic">
-                                  Series: {item.category}
+                              <div className="flex flex-col gap-0.5 mt-0.5">
+                                <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">
+                                  Capacity: {item.danfoss?.tr || item.danfoss?.capacity} TR
                                 </p>
-                              )}
+                                {(searchQuery || isSelected) && (
+                                  <p className="text-[9px] text-red-500/80 font-black tracking-tighter uppercase italic">
+                                    Series: {item.category}
+                                  </p>
+                                )}
+                              </div>
                             </div>
                           </div>
+                          <ChevronRight className={`w-5 h-5 transition-transform ${isSelected ? "text-red-600 translate-x-1" : "text-slate-300"}`} />
                         </div>
-                        <ChevronRight className={`w-5 h-5 transition-transform ${isSelected ? "text-red-600 translate-x-1" : "text-slate-300"}`} />
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
 
-            {/* Comparison Detail */}
-            <div className="lg:col-span-2">
-              {selectedModel !== null ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  key={selectedModel}
-                >
-                  <Card className="h-full border-slate-200">
-                    <div className="bg-red-600 p-6 text-white flex justify-between items-center">
-                      <div>
-                        <p className="text-red-200 text-xs font-bold uppercase tracking-widest mb-1">Detailed Technical View</p>
-                        <h4 className="text-2xl font-bold">
-                          {filteredData[selectedModel].danfoss?.model || filteredData[selectedModel].danfoss?.mt}
-                        </h4>
+              <div className="lg:col-span-2">
+                {selectedModel !== null ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    key={selectedModel}
+                  >
+                    <Card className="p-4 mb-6 border-red-100 bg-red-50/30">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Zap className="w-4 h-4 text-red-600" />
+                        <h4 className="font-bold text-sm text-red-900">Smart Suggestion</h4>
                       </div>
-                      <ArrowRightLeft className="w-8 h-8 text-white/30" />
-                    </div>
-                    
-                    <div className="p-8">
-                      <div className="grid grid-cols-12 mb-2 bg-yellow-400 p-3 rounded-t-xl border-x border-t border-slate-300">
-                        <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider flex items-center">Technical Specs</div>
-                        <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Danfoss Performance</div>
-                        <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Copeland Equivalent</div>
-                      </div>
-
-                      <div className="bg-white rounded-b-xl overflow-hidden border border-slate-300 shadow-sm">
-                        {filteredData[selectedModel].category === "MT_MTZ" ? (
+                      <p className="text-xs text-slate-600">
+                        Based on {filteredData[selectedModel].danfoss?.tr || filteredData[selectedModel].danfoss?.capacity} TR capacity, this unit is best suited for:
+                      </p>
+                      <ul className="text-xs mt-3 text-red-600 font-semibold space-y-1">
+                        {filteredData[selectedModel].category === "MLZ" ? (
                           <>
-                            <ComparisonRow 
-                              label="Model Variant" 
-                              danfossValue={`MT: ${filteredData[selectedModel].danfoss?.mt} / MTZ: ${filteredData[selectedModel].danfoss?.mtz}`} 
-                              copelandValue={filteredData[selectedModel].copeland?.model} 
-                              icon={Maximize2}
-                            />
-                            <ComparisonRow 
-                              label="Capacity (TR)" 
-                              danfossValue={filteredData[selectedModel].danfoss?.capacity} 
-                              copelandValue={filteredData[selectedModel].copeland?.capacity} 
-                              icon={Zap}
-                            />
+                            <li>• Cold storage and walk-in coolers</li>
+                            <li>• Precise medium-temp refrigeration</li>
+                          </>
+                        ) : filteredData[selectedModel].category === "DSH" ? (
+                          <>
+                            <li>• High-efficiency chiller systems</li>
+                            <li>• Data centers & process cooling</li>
+                          </>
+                        ) : (parseFloat(filteredData[selectedModel].danfoss?.tr || filteredData[selectedModel].danfoss?.capacity) > 10) ? (
+                          <>
+                            <li>• Large commercial HVAC systems</li>
+                            <li>• Multi-story building cooling</li>
                           </>
                         ) : (
                           <>
-                            <ComparisonRow 
-                              label="Model Number" 
-                              danfossValue={filteredData[selectedModel].danfoss?.model} 
-                              copelandValue={filteredData[selectedModel].copeland?.model} 
-                              icon={Maximize2}
-                              isSubHeader={true}
-                            />
-                            {filteredData[selectedModel].danfoss?.type && (
-                              <ComparisonRow 
-                                label="Compressor Type" 
-                                danfossValue={filteredData[selectedModel].danfoss?.type} 
-                                copelandValue={filteredData[selectedModel].copeland?.type} 
-                                icon={Info}
-                              />
-                            )}
-                            {filteredData[selectedModel].category === "DSH" && (
-                              <ComparisonRow 
-                                label="Frequency (Hz)" 
-                                danfossValue={`${filteredData[selectedModel].hz} Hz`} 
-                                copelandValue="-" 
-                                icon={Info}
-                              />
-                            )}
-                            <ComparisonRow 
-                              label="Capacity (TR)" 
-                              danfossValue={filteredData[selectedModel].danfoss?.tr} 
-                              copelandValue={filteredData[selectedModel].copeland?.tr} 
-                              icon={Zap}
-                            />
-                            <ComparisonRow 
-                              label="Cooling (W)" 
-                              danfossValue={filteredData[selectedModel].danfoss?.w} 
-                              copelandValue={filteredData[selectedModel].copeland?.w} 
-                              icon={CheckCircle2}
-                            />
-                            <ComparisonRow 
-                              label="Cooling (Btu/hr)" 
-                              danfossValue={filteredData[selectedModel].danfoss?.btu} 
-                              copelandValue={filteredData[selectedModel].copeland?.btu} 
-                              icon={CheckCircle2}
-                            />
-                            <ComparisonRow 
-                              label="Dimensions (mm)" 
-                              danfossValue={filteredData[selectedModel].danfoss?.dimensions} 
-                              copelandValue={filteredData[selectedModel].copeland?.dimensions} 
-                              icon={Maximize2}
-                            />
-                            {filteredData[selectedModel].danfoss?.code && (
-                              <ComparisonRow 
-                                label="Ordering Code" 
-                                danfossValue={filteredData[selectedModel].danfoss?.code} 
-                                copelandValue="-" 
-                                icon={Filter}
-                              />
-                            )}
+                            <li>• High ambient residential units</li>
+                            <li>• Light commercial air conditioning</li>
                           </>
                         )}
-                      </div>
+                        <li>• Energy efficient retrofitting</li>
+                      </ul>
+                    </Card>
 
-                      <div className="mt-8 grid grid-cols-2 gap-4">
-                        <div className="p-4 bg-red-50 rounded-xl border border-red-100">
-                          <h5 className="text-red-900 font-bold text-sm mb-2 flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4" /> Series Advantage
-                          </h5>
-                          <p className="text-xs text-red-700 leading-relaxed">
-                            {SERIES_INSIGHTS[filteredData[selectedModel].category]?.advantage}
-                          </p>
+                    <Card className="h-full border-slate-200">
+                      <div className="bg-red-600 p-6 text-white flex justify-between items-center">
+                        <div>
+                          <p className="text-red-200 text-xs font-bold uppercase tracking-widest mb-1">Detailed Technical View</p>
+                          <h4 className="text-2xl font-bold">
+                            {filteredData[selectedModel].danfoss?.model || filteredData[selectedModel].danfoss?.mt}
+                          </h4>
                         </div>
-                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                          <h5 className="text-slate-900 font-bold text-sm mb-2 flex items-center gap-2">
-                            <Maximize2 className="w-4 h-4" /> Application Fit
-                          </h5>
-                          <p className="text-xs text-slate-600 leading-relaxed">
-                            {SERIES_INSIGHTS[filteredData[selectedModel].category]?.fit}
-                          </p>
+                        <ArrowRightLeft className="w-8 h-8 text-white/30" />
+                      </div>
+                      
+                      <div className="p-8">
+                        <div className="grid grid-cols-12 mb-2 bg-yellow-400 p-3 rounded-t-xl border-x border-t border-slate-300 sticky top-0 z-10 shadow-sm">
+                          <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider flex items-center">Technical Specs</div>
+                          <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Danfoss Performance</div>
+                          <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Copeland Equivalent</div>
+                        </div>
+
+                        <div className="bg-white rounded-b-xl overflow-hidden border border-slate-300 shadow-sm">
+                          {filteredData[selectedModel].category === "MT_MTZ" ? (
+                            <>
+                              <ComparisonRow 
+                                label="Model Variant" 
+                                danfossValue={`MT: ${filteredData[selectedModel].danfoss?.mt} / MTZ: ${filteredData[selectedModel].danfoss?.mtz}`} 
+                                copelandValue={filteredData[selectedModel].copeland?.model} 
+                                icon={Maximize2}
+                                explanation={explainMode ? "Different variants optimized for specific refrigerants and oil types." : null}
+                              />
+                              <ComparisonRow 
+                                label="Capacity (TR)" 
+                                danfossValue={filteredData[selectedModel].danfoss?.capacity} 
+                                copelandValue={filteredData[selectedModel].copeland?.capacity} 
+                                icon={Zap}
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.capacity, filteredData[selectedModel].copeland?.capacity)}
+                                explanation={explainMode ? "Tonnage Refrigeration (TR) defines the cooling power. Higher is better for larger spaces." : null}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <ComparisonRow 
+                                label="Model Number" 
+                                danfossValue={filteredData[selectedModel].danfoss?.model} 
+                                copelandValue={filteredData[selectedModel].copeland?.model} 
+                                icon={Maximize2}
+                                isSubHeader={true}
+                              />
+                              {filteredData[selectedModel].danfoss?.type && (
+                                <ComparisonRow 
+                                  label="Compressor Type" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.type} 
+                                  copelandValue={filteredData[selectedModel].copeland?.type} 
+                                  icon={Info}
+                                  explanation={explainMode ? "Defines the internal mechanical architecture of the scroll." : null}
+                                />
+                              )}
+                              {filteredData[selectedModel].category === "DSH" && (
+                                <ComparisonRow 
+                                  label="Frequency (Hz)" 
+                                  danfossValue={`${filteredData[selectedModel].hz} Hz`} 
+                                  copelandValue="-" 
+                                  icon={Info}
+                                  explanation={explainMode ? "Standard electrical frequency for the application region." : null}
+                                />
+                              )}
+                              <ComparisonRow 
+                                label="Capacity (TR)" 
+                                danfossValue={filteredData[selectedModel].danfoss?.tr} 
+                                copelandValue={filteredData[selectedModel].copeland?.tr} 
+                                icon={Zap}
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.tr, filteredData[selectedModel].copeland?.tr)}
+                                explanation={explainMode ? "Total cooling capacity in Tons of Refrigeration." : null}
+                              />
+                              <ComparisonRow 
+                                label="Cooling (W)" 
+                                danfossValue={filteredData[selectedModel].danfoss?.w} 
+                                copelandValue={filteredData[selectedModel].copeland?.w} 
+                                icon={CheckCircle2}
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.w, filteredData[selectedModel].copeland?.w)}
+                                explanation={explainMode ? "Cooling power measured in Watts. Higher values indicate more cooling energy." : null}
+                              />
+                              <ComparisonRow 
+                                label="Cooling (Btu/hr)" 
+                                danfossValue={filteredData[selectedModel].danfoss?.btu} 
+                                copelandValue={filteredData[selectedModel].copeland?.btu} 
+                                icon={CheckCircle2}
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.btu, filteredData[selectedModel].copeland?.btu)}
+                                explanation={explainMode ? "British Thermal Units per hour. Standard unit for cooling capacity." : null}
+                              />
+                              <ComparisonRow 
+                                label="Dimensions (mm)" 
+                                danfossValue={filteredData[selectedModel].danfoss?.dimensions} 
+                                copelandValue={filteredData[selectedModel].copeland?.dimensions} 
+                                icon={Maximize2}
+                                explanation={explainMode ? "Physical size. Smaller dimensions often allow for more flexible installation." : null}
+                              />
+                              {filteredData[selectedModel].danfoss?.code && (
+                                <ComparisonRow 
+                                  label="Ordering Code" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.code} 
+                                  copelandValue="-" 
+                                  icon={Filter}
+                                  explanation={explainMode ? "Unique identifier for placing orders with Danfoss." : null}
+                                />
+                              )}
+                            </>
+                          )}
+                        </div>
+
+                        <div className="mt-8 grid grid-cols-2 gap-4">
+                          <div className="p-4 bg-red-50 rounded-xl border border-red-100">
+                            <h5 className="text-red-900 font-bold text-sm mb-2 flex items-center gap-2">
+                              <CheckCircle2 className="w-4 h-4" /> Series Advantage
+                            </h5>
+                            <p className="text-xs text-red-700 leading-relaxed">
+                              {SERIES_INSIGHTS[filteredData[selectedModel].category]?.advantage}
+                            </p>
+                          </div>
+                          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <h5 className="text-slate-900 font-bold text-sm mb-2 flex items-center gap-2">
+                              <Maximize2 className="w-4 h-4" /> Application Fit
+                            </h5>
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                              {SERIES_INSIGHTS[filteredData[selectedModel].category]?.fit}
+                            </p>
+                          </div>
                         </div>
                       </div>
+                    </Card>
+                  </motion.div>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center bg-white rounded-2xl border-2 border-dashed border-slate-200 p-12 text-center">
+                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                      <ArrowRightLeft className="w-10 h-10 text-slate-300" />
                     </div>
-                  </Card>
-                </motion.div>
-              ) : (
-                <div className="h-full flex flex-col items-center justify-center bg-white rounded-2xl border-2 border-dashed border-slate-200 p-12 text-center">
-                  <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                    <ArrowRightLeft className="w-10 h-10 text-slate-300" />
+                    <h4 className="text-xl font-bold text-slate-800">Select a model or search across 120+ compressors</h4>
+                    <p className="text-slate-500 max-w-xs mt-2">
+                      Hover or select a compressor model from the left to see how Danfoss stays ahead of the competition.
+                    </p>
                   </div>
-                  <h4 className="text-xl font-bold text-slate-800">Ready to Compare?</h4>
-                  <p className="text-slate-500 max-w-xs mt-2">
-                    Select a compressor model from the left to see how Danfoss stays ahead of the competition.
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          </motion.div>
         </section>
 
-        {/* --- Features Footer --- */}
         <section className="mt-24 pt-12 border-t border-slate-200">
           <div className="grid md:grid-cols-3 gap-12">
             <div className="space-y-4">
@@ -620,7 +758,9 @@ const App = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div>
             <div className="flex items-center gap-4 mb-4">
-              <img src="/Outlook-kvcuysmb.png" alt="Danfoss Logo" className="h-8 w-auto brightness-0 invert" />
+              <div className="bg-white p-1 rounded-lg">
+                <img src="/Outlook-kvcuysmb.png" alt="Danfoss Logo" className="h-8 w-auto" />
+              </div>
               <span className="text-xl font-bold tracking-tight">Staying Ahead</span>
             </div>
             <p className="text-slate-400 text-xs max-w-xs">
