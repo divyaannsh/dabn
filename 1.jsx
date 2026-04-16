@@ -138,6 +138,34 @@ const ComparisonRow = ({ label, danfossValue, copelandValue, icon: Icon, isSubHe
   </div>
 );
 
+const SERIES_INSIGHTS = {
+  "H series": {
+    summary: "Optimized for high-ambient residential and light commercial air conditioning.",
+    advantage: "Superior part-load efficiency and compact scroll design for seamless integration.",
+    fit: "Perfect drop-in for ZR25K to ZR61K models with standard mounting patterns."
+  },
+  "S series": {
+    summary: "High-capacity scroll compressors designed for large commercial HVAC systems.",
+    advantage: "Features dedicated S3 and S4 types for precise matching of system requirements.",
+    fit: "Engineered to replace ZR94KC to ZR19M3 models with equivalent performance curves."
+  },
+  "MLZ": {
+    summary: "Dedicated scroll solutions for medium-temperature refrigeration applications.",
+    advantage: "High seasonal efficiency (SEER) and robust design for 24/7 cold chain reliability.",
+    fit: "Directly cross-referenced with ZB15KCE to ZB76KCE Copeland refrigeration scrolls."
+  },
+  "DSH": {
+    summary: "Next-generation scrolls with Intermediate Discharge Valves (IDVs) for maximum efficiency.",
+    advantage: "IDV technology prevents over-compression, significantly boosting seasonal efficiency.",
+    fit: "Optimized for ZP90KCE to ZP295KCE replacements in high-efficiency chillers."
+  },
+  "MT_MTZ": {
+    summary: "Maneurop reciprocating compressors for versatile refrigeration needs.",
+    advantage: "Handles varying cooling loads with ease; compatible with multiple refrigerants.",
+    fit: "Reliable alternative to CR22 through CR62 series reciprocating units."
+  }
+};
+
 const App = () => {
   const [activeTab, setActiveTab] = useState("H series");
   const [searchQuery, setSearchQuery] = useState("");
@@ -313,44 +341,38 @@ const App = () => {
           <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl overflow-hidden relative">
             <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
             <div className="relative z-10">
-              <Badge variant="red">Comparison Summary</Badge>
-              <h3 className="text-3xl font-black text-slate-900 mt-4 mb-8">Danfoss vs. Copeland <br/><span className="text-red-600">The Advantage at a Glance.</span></h3>
+              <Badge variant="red">Series Insights</Badge>
+              <h3 className="text-3xl font-black text-slate-900 mt-4 mb-8">
+                {activeTab} Overview <br/>
+                <span className="text-red-600">The Danfoss Advantage.</span>
+              </h3>
               
               <div className="grid md:grid-cols-4 gap-6">
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 md:col-span-2">
                   <div className="w-10 h-10 bg-red-600 text-white rounded-lg flex items-center justify-center mb-4">
-                    <Maximize2 className="w-5 h-5" />
+                    <Info className="w-5 h-5" />
                   </div>
-                  <h5 className="font-bold text-slate-900 mb-2">Compact Footprint</h5>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Danfoss DSH and MLZ series are often more compact, offering up to 20% space savings for easier installation.
+                  <h5 className="font-bold text-slate-900 mb-2">Series Summary</h5>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    {SERIES_INSIGHTS[activeTab]?.summary}
                   </p>
                 </div>
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
                     <Zap className="w-5 h-5" />
                   </div>
-                  <h5 className="font-bold text-slate-900 mb-2">Energy Efficiency</h5>
+                  <h5 className="font-bold text-slate-900 mb-2">Core Strength</h5>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Optimized part-load efficiency across H and S series ensures lower operational costs throughout the system's life.
+                    {SERIES_INSIGHTS[activeTab]?.advantage}
                   </p>
                 </div>
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-4">
                     <ArrowRightLeft className="w-5 h-5" />
                   </div>
-                  <h5 className="font-bold text-slate-900 mb-2">Direct Mapping</h5>
+                  <h5 className="font-bold text-slate-900 mb-2">Seamless Fit</h5>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Seamless equivalency with ZR, ZB, and ZP models makes Danfoss a perfect drop-in replacement.
-                  </p>
-                </div>
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                  <div className="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center mb-4">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <h5 className="font-bold text-slate-900 mb-2">Global Reliability</h5>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Built to withstand harsh environments with advanced scroll technology and fewer moving parts.
+                    {SERIES_INSIGHTS[activeTab]?.fit}
                   </p>
                 </div>
               </div>
@@ -478,6 +500,14 @@ const App = () => {
                               icon={Maximize2}
                               isSubHeader={true}
                             />
+                            {filteredData[selectedModel].danfoss?.type && (
+                              <ComparisonRow 
+                                label="Compressor Type" 
+                                danfossValue={filteredData[selectedModel].danfoss?.type} 
+                                copelandValue={filteredData[selectedModel].copeland?.type} 
+                                icon={Info}
+                              />
+                            )}
                             {filteredData[selectedModel].category === "DSH" && (
                               <ComparisonRow 
                                 label="Frequency (Hz)" 
@@ -525,18 +555,18 @@ const App = () => {
                       <div className="mt-8 grid grid-cols-2 gap-4">
                         <div className="p-4 bg-red-50 rounded-xl border border-red-100">
                           <h5 className="text-red-900 font-bold text-sm mb-2 flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4" /> Why Danfoss?
+                            <CheckCircle2 className="w-4 h-4" /> Series Advantage
                           </h5>
                           <p className="text-xs text-red-700 leading-relaxed">
-                            Up to 15% better energy efficiency at part-load conditions compared to traditional scroll compressors.
+                            {SERIES_INSIGHTS[filteredData[selectedModel].category]?.advantage}
                           </p>
                         </div>
                         <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
                           <h5 className="text-slate-900 font-bold text-sm mb-2 flex items-center gap-2">
-                            <Maximize2 className="w-4 h-4" /> Seamless Fit
+                            <Maximize2 className="w-4 h-4" /> Application Fit
                           </h5>
                           <p className="text-xs text-slate-600 leading-relaxed">
-                            Compact dimensions ensure easy drop-in replacement in most existing system architectures.
+                            {SERIES_INSIGHTS[filteredData[selectedModel].category]?.fit}
                           </p>
                         </div>
                       </div>

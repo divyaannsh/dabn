@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+data.json
+read_docx.js
+read_xlsx.js
+extract_data.js
+*.xlsx
+*.docx
