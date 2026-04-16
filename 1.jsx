@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { 
   Search, 
   ChevronRight, 
@@ -10,7 +10,11 @@ import {
   Award,
   Filter,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Brain,
+  Layers,
+  Download,
+  Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -130,8 +134,15 @@ const SERIES_INSIGHTS = {
   }
 };
 
+const USE_CASES = [
+  { label: "Residential", icon: ShieldCheck, filter: "H series" },
+  { label: "Commercial", icon: Award, filter: "S series" },
+  { label: "Refrigeration", icon: Zap, filter: "MLZ" },
+  { label: "High Efficiency", icon: Brain, filter: "DSH" }
+];
+
 const Card = ({ children, className = "" }) => (
-  <div className={`bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden ${className}`}>
+  <div className={`bg-white/40 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-xl overflow-hidden ${className}`}>
     {children}
   </div>
 );
@@ -151,12 +162,17 @@ const Badge = ({ children, variant = "red", className = "" }) => {
   );
 };
 
-const ComparisonRow = ({ label, danfossValue, copelandValue, icon: Icon, isSubHeader = false, isBetter = null, explanation = null }) => (
+const ComparisonRow = ({ label, danfossValue, copelandValue, icon: Icon, isSubHeader = false, isBetter = null, explanation = null, tooltip = null }) => (
   <div className="group relative">
     <div className={`grid grid-cols-12 py-2 border-b border-slate-200 last:border-0 hover:bg-slate-50/50 transition-colors px-4 ${isSubHeader ? "bg-slate-100/50 font-bold" : ""}`}>
-      <div className="col-span-4 flex items-center gap-2">
+      <div className="col-span-4 flex items-center gap-2 group/tip relative">
         {Icon && <Icon className="w-3.5 h-3.5 text-slate-400" />}
         <span className={`text-xs ${isSubHeader ? "text-slate-700" : "text-slate-500 font-medium"}`}>{label}</span>
+        {tooltip && (
+          <div className="absolute left-0 bottom-full mb-2 hidden group-hover/tip:block z-[60] w-48 p-2 bg-slate-900 text-white text-[10px] rounded shadow-xl">
+            {tooltip}
+          </div>
+        )}
       </div>
       <div className={`col-span-4 text-xs px-2 border-l border-slate-100 flex items-center gap-2 ${isSubHeader ? "text-slate-900" : isBetter === true ? "text-green-600 font-black" : "text-red-700 font-semibold"}`}>
         {danfossValue || <span className="text-slate-300 italic">-</span>}
@@ -185,48 +201,68 @@ const App = () => {
   const [selectedModel, setSelectedModel] = useState(null);
   const [showIntro, setShowIntro] = useState(true);
   const [explainMode, setExplainMode] = useState(false);
+  const [activeUseCase, setActiveUseCase] = useState(null);
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowIntro(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
+  const smartSearch = (query) => {
+    const q = query.toLowerCase();
+    if (q.includes("cold") || q.includes("refrig")) return "MLZ";
+    if (q.includes("high efficiency") || q.includes("data center")) return "DSH";
+    if (q.includes("residential") || q.includes("home")) return "H series";
+    if (q.includes("commercial") || q.includes("large")) return "S series";
+    return null;
+  };
+
   const filteredData = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
+    const smartCategory = smartSearch(query);
     
-    if (!query) {
-      return (COMPRESSOR_DATA[activeTab] || []).map(item => ({ ...item, category: activeTab }));
+    let baseData = [];
+    if (smartCategory) {
+      baseData = (COMPRESSOR_DATA[smartCategory] || []).map(item => ({ ...item, category: smartCategory }));
+    } else if (activeUseCase) {
+      baseData = (COMPRESSOR_DATA[activeUseCase] || []).map(item => ({ ...item, category: activeUseCase }));
+    } else if (!query) {
+      baseData = (COMPRESSOR_DATA[activeTab] || []).map(item => ({ ...item, category: activeTab }));
+    } else {
+      Object.entries(COMPRESSOR_DATA).forEach(([category, items]) => {
+        items.forEach(item => {
+          baseData.push({ ...item, category });
+        });
+      });
     }
 
-    const allData = [];
-    Object.entries(COMPRESSOR_DATA).forEach(([category, items]) => {
-      items.forEach(item => {
-        allData.push({ ...item, category });
-      });
-    });
+    if (!query || smartCategory) return baseData;
 
-    return allData.filter(item => {
+    return baseData.filter(item => {
       const danfossMatch = Object.values(item.danfoss || {}).some(val => 
         String(val).toLowerCase().includes(query)
       );
       const copelandMatch = Object.values(item.copeland || {}).some(val => 
         String(val).toLowerCase().includes(query)
       );
-      const categoryMatch = item.category.toLowerCase().includes(query);
-      const otherMatch = Object.entries(item).some(([key, val]) => 
-        key !== 'danfoss' && key !== 'copeland' && key !== 'category' && String(val).toLowerCase().includes(query)
-      );
-      return danfossMatch || copelandMatch || otherMatch || categoryMatch;
+      return danfossMatch || copelandMatch;
     });
-  }, [activeTab, searchQuery]);
+  }, [activeTab, searchQuery, activeUseCase]);
 
   useEffect(() => {
-    if (searchQuery && filteredData.length > 0) {
+    if ((searchQuery || activeUseCase) && filteredData.length > 0) {
       setSelectedModel(0);
-    } else if (!searchQuery) {
+    } else if (!searchQuery && !activeUseCase) {
       setSelectedModel(null);
     }
-  }, [searchQuery, filteredData.length]);
+  }, [searchQuery, filteredData.length, activeUseCase]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -257,8 +293,30 @@ const App = () => {
     return dv > cv;
   };
 
+  const calculateVerdict = (item) => {
+    if (!item) return null;
+    let danfossWins = 0;
+    let totalMetrics = 0;
+    
+    const metrics = ['tr', 'w', 'btu'];
+    metrics.forEach(m => {
+      if (item.danfoss?.[m] && item.copeland?.[m]) {
+        totalMetrics++;
+        if (isBetter(item.danfoss[m], item.copeland[m])) danfossWins++;
+      }
+    });
+    
+    return {
+      wins: danfossWins,
+      total: totalMetrics,
+      score: totalMetrics > 0 ? Math.round((danfossWins / totalMetrics) * 100) : 95
+    };
+  };
+
+  const currentVerdict = useMemo(() => calculateVerdict(filteredData[selectedModel]), [selectedModel, filteredData]);
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-red-100 selection:text-red-900">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-red-100 selection:text-red-900 overflow-x-hidden">
       <AnimatePresence> 
         {showIntro && ( 
           <motion.div 
@@ -283,7 +341,7 @@ const App = () => {
         )} 
       </AnimatePresence>
 
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
+      <nav className="sticky top-0 z-50 bg-white/40 backdrop-blur-2xl border-b border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.05)] px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4 group cursor-pointer">
             <img src="/Outlook-kvcuysmb.png" alt="Danfoss Logo" className="h-10 w-auto" />
@@ -294,13 +352,13 @@ const App = () => {
             </div>
           </div>
           
-          <div className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+          <div className="hidden md:flex items-center gap-1 bg-slate-100/50 p-1 rounded-xl">
             {Object.keys(COMPRESSOR_DATA).map(tab => (
               <button
                 key={tab}
-                onClick={() => { setActiveTab(tab); setSelectedModel(null); }}
+                onClick={() => { setActiveTab(tab); setSelectedModel(null); setActiveUseCase(null); }}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  activeTab === tab 
+                  activeTab === tab && !activeUseCase
                     ? "bg-white text-red-600 shadow-sm" 
                     : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/50"
                 }`}
@@ -327,7 +385,7 @@ const App = () => {
               <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${searchQuery ? "text-red-600" : "text-slate-400"}`} />
               <input 
                 type="text"
-                placeholder="Search models..."
+                placeholder="Describe your requirement..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -342,8 +400,11 @@ const App = () => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        <section className="mb-16">
+      <main className="max-w-7xl mx-auto px-6 py-12 relative">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-red-200/20 blur-3xl rounded-full animate-pulse z-0" />
+        <div className="absolute top-40 right-10 w-48 h-48 bg-blue-200/10 blur-3xl rounded-full animate-bounce z-0" />
+
+        <section className="mb-16 relative z-10" id="hero" style={{ transform: `translateY(${scrollY * 0.1}px)` }}>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
@@ -360,6 +421,24 @@ const App = () => {
                 Experience the "Staying Ahead" advantage with optimized cooling capacity, 
                 reduced footprint, and industry-leading reliability.
               </p>
+              
+              <div className="flex flex-wrap gap-2 mt-8">
+                {USE_CASES.map(uc => (
+                  <button
+                    key={uc.label}
+                    onClick={() => { setActiveUseCase(uc.filter); setActiveTab(uc.filter); setSelectedModel(null); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border ${
+                      activeUseCase === uc.filter 
+                        ? "bg-red-600 text-white border-red-600 shadow-lg shadow-red-100" 
+                        : "bg-white text-slate-500 border-slate-200 hover:border-red-200 hover:text-red-600"
+                    }`}
+                  >
+                    <uc.icon className="w-3.5 h-3.5" />
+                    {uc.label}
+                  </button>
+                ))}
+              </div>
+
               <div className="flex gap-4 mt-10">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
@@ -409,13 +488,13 @@ const App = () => {
                     <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
-                        animate={{ width: "95%" }}
+                        animate={{ width: `${currentVerdict?.score || 95}%` }}
                         transition={{ duration: 1, delay: 0.5 }}
                         className="h-full bg-red-300"
                       />
                     </div>
                     <div className="flex flex-col text-right">
-                      <span className="text-xs font-bold">95% Efficiency</span>
+                      <span className="text-xs font-bold">{currentVerdict?.score || 95}% Match Confidence</span>
                       <span className="text-[8px] font-black uppercase tracking-tighter text-red-200">High Confidence</span>
                     </div>
                   </div>
@@ -425,8 +504,8 @@ const App = () => {
           </div>
         </section>
 
-        <section className="mb-24">
-          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl overflow-hidden relative">
+        <section className="mb-24 relative z-10">
+          <div className="bg-white/40 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-8 rounded-3xl overflow-hidden relative">
             <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
             <div className="relative z-10">
               <Badge variant="red">Series Insights</Badge>
@@ -436,7 +515,7 @@ const App = () => {
               </h3>
               
               <div className="grid md:grid-cols-4 gap-6">
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 md:col-span-2">
+                <div className="p-5 bg-white/60 rounded-2xl border border-white/40 md:col-span-2">
                   <div className="w-10 h-10 bg-red-600 text-white rounded-lg flex items-center justify-center mb-4">
                     <Info className="w-5 h-5" />
                   </div>
@@ -445,7 +524,7 @@ const App = () => {
                     {SERIES_INSIGHTS[activeTab]?.summary}
                   </p>
                 </div>
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="p-5 bg-white/60 rounded-2xl border border-white/40">
                   <div className="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
                     <Zap className="w-5 h-5" />
                   </div>
@@ -454,7 +533,7 @@ const App = () => {
                     {SERIES_INSIGHTS[activeTab]?.advantage}
                   </p>
                 </div>
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="p-5 bg-white/60 rounded-2xl border border-white/40">
                   <div className="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-4">
                     <ArrowRightLeft className="w-5 h-5" />
                   </div>
@@ -468,24 +547,30 @@ const App = () => {
           </div>
         </section>
 
-        <section>
+        <section className="relative z-10">
           <motion.div 
-            key={activeTab} 
+            key={activeTab + searchQuery} 
             initial={{ opacity: 0, y: 10 }} 
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-2xl font-bold text-slate-900">
-                  {searchQuery ? "Global Search Results" : `${activeTab} Comparison`}
+                  {searchQuery ? "Intelligent Results" : `${activeTab} Comparison`}
                 </h3>
                 <p className="text-slate-500 text-sm">
-                  {searchQuery ? `Searching across all categories for "${searchQuery}"` : "Select a model to view detailed technical specifications"}
+                  {searchQuery ? `Analyzing requirements for "${searchQuery}"` : "Select a model to view detailed technical specifications"}
                 </p>
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
-                <Filter className="w-4 h-4" />
-                <span>{filteredData.length} Models Found</span>
+              <div className="flex items-center gap-4">
+                <button className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm hover:border-red-200 hover:text-red-600 transition-all">
+                  <Download className="w-3.5 h-3.5" />
+                  Export PDF
+                </button>
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                  <Filter className="w-4 h-4" />
+                  <span>{filteredData.length} Models Found</span>
+                </div>
               </div>
             </div>
 
@@ -548,39 +633,26 @@ const App = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     key={selectedModel}
                   >
-                    <Card className="p-4 mb-6 border-red-100 bg-red-50/30">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Zap className="w-4 h-4 text-red-600" />
-                        <h4 className="font-bold text-sm text-red-900">Smart Suggestion</h4>
-                      </div>
-                      <p className="text-xs text-slate-600">
-                        Based on {filteredData[selectedModel].danfoss?.tr || filteredData[selectedModel].danfoss?.capacity} TR capacity, this unit is best suited for:
-                      </p>
-                      <ul className="text-xs mt-3 text-red-600 font-semibold space-y-1">
-                        {filteredData[selectedModel].category === "MLZ" ? (
-                          <>
-                            <li>• Cold storage and walk-in coolers</li>
-                            <li>• Precise medium-temp refrigeration</li>
-                          </>
-                        ) : filteredData[selectedModel].category === "DSH" ? (
-                          <>
-                            <li>• High-efficiency chiller systems</li>
-                            <li>• Data centers & process cooling</li>
-                          </>
-                        ) : (parseFloat(filteredData[selectedModel].danfoss?.tr || filteredData[selectedModel].danfoss?.capacity) > 10) ? (
-                          <>
-                            <li>• Large commercial HVAC systems</li>
-                            <li>• Multi-story building cooling</li>
-                          </>
-                        ) : (
-                          <>
-                            <li>• High ambient residential units</li>
-                            <li>• Light commercial air conditioning</li>
-                          </>
-                        )}
-                        <li>• Energy efficient retrofitting</li>
-                      </ul>
-                    </Card>
+                    <div className="grid md:grid-cols-2 gap-4 mb-6">
+                      <Card className="p-4 bg-green-50/50 border-green-100">
+                        <div className="flex items-center gap-2 mb-2 text-green-800">
+                          <Check className="w-4 h-4" />
+                          <h4 className="font-bold text-sm">Final Verdict</h4>
+                        </div>
+                        <p className="text-xs text-green-700 leading-relaxed">
+                          Danfoss outperforms Copeland in {currentVerdict?.wins}/{currentVerdict?.total} key technical metrics for this specific selection.
+                        </p>
+                      </Card>
+                      <Card className="p-4 bg-red-50/50 border-red-100">
+                        <div className="flex items-center gap-2 mb-2 text-red-800">
+                          <Zap className="w-4 h-4" />
+                          <h4 className="font-bold text-sm">Smart Suggestion</h4>
+                        </div>
+                        <p className="text-xs text-red-700 leading-relaxed">
+                          Ideal for {filteredData[selectedModel].category === 'MLZ' ? 'Refrigeration' : 'High-Ambient AC'} use cases.
+                        </p>
+                      </Card>
+                    </div>
 
                     <Card className="h-full border-slate-200">
                       <div className="bg-red-600 p-6 text-white flex justify-between items-center">
@@ -590,7 +662,13 @@ const App = () => {
                             {filteredData[selectedModel].danfoss?.model || filteredData[selectedModel].danfoss?.mt}
                           </h4>
                         </div>
-                        <ArrowRightLeft className="w-8 h-8 text-white/30" />
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-[10px] text-red-100 uppercase font-bold">Match Score</p>
+                            <p className="text-2xl font-black">{currentVerdict?.score}%</p>
+                          </div>
+                          <ArrowRightLeft className="w-8 h-8 text-white/30" />
+                        </div>
                       </div>
                       
                       <div className="p-8">
@@ -608,6 +686,7 @@ const App = () => {
                                 danfossValue={`MT: ${filteredData[selectedModel].danfoss?.mt} / MTZ: ${filteredData[selectedModel].danfoss?.mtz}`} 
                                 copelandValue={filteredData[selectedModel].copeland?.model} 
                                 icon={Maximize2}
+                                tooltip="Danfoss MT/MTZ offers flexibility for various refrigeration oils."
                                 explanation={explainMode ? "Different variants optimized for specific refrigerants and oil types." : null}
                               />
                               <ComparisonRow 
@@ -615,6 +694,7 @@ const App = () => {
                                 danfossValue={filteredData[selectedModel].danfoss?.capacity} 
                                 copelandValue={filteredData[selectedModel].copeland?.capacity} 
                                 icon={Zap}
+                                tooltip="TR = Tons of Refrigeration. 1 TR = 3.5 kW."
                                 isBetter={isBetter(filteredData[selectedModel].danfoss?.capacity, filteredData[selectedModel].copeland?.capacity)}
                                 explanation={explainMode ? "Tonnage Refrigeration (TR) defines the cooling power. Higher is better for larger spaces." : null}
                               />
@@ -634,6 +714,7 @@ const App = () => {
                                   danfossValue={filteredData[selectedModel].danfoss?.type} 
                                   copelandValue={filteredData[selectedModel].copeland?.type} 
                                   icon={Info}
+                                  tooltip="Mechanical architecture: S3 vs S4 optimization."
                                   explanation={explainMode ? "Defines the internal mechanical architecture of the scroll." : null}
                                 />
                               )}
@@ -643,6 +724,7 @@ const App = () => {
                                   danfossValue={`${filteredData[selectedModel].hz} Hz`} 
                                   copelandValue="-" 
                                   icon={Info}
+                                  tooltip="Operational frequency standard for regional power grids."
                                   explanation={explainMode ? "Standard electrical frequency for the application region." : null}
                                 />
                               )}
@@ -651,6 +733,7 @@ const App = () => {
                                 danfossValue={filteredData[selectedModel].danfoss?.tr} 
                                 copelandValue={filteredData[selectedModel].copeland?.tr} 
                                 icon={Zap}
+                                tooltip="Cooling capacity in tons. 1 TR = 12,000 BTU/hr."
                                 isBetter={isBetter(filteredData[selectedModel].danfoss?.tr, filteredData[selectedModel].copeland?.tr)}
                                 explanation={explainMode ? "Total cooling capacity in Tons of Refrigeration." : null}
                               />
@@ -659,6 +742,7 @@ const App = () => {
                                 danfossValue={filteredData[selectedModel].danfoss?.w} 
                                 copelandValue={filteredData[selectedModel].copeland?.w} 
                                 icon={CheckCircle2}
+                                tooltip="Wattage defines total electrical cooling power."
                                 isBetter={isBetter(filteredData[selectedModel].danfoss?.w, filteredData[selectedModel].copeland?.w)}
                                 explanation={explainMode ? "Cooling power measured in Watts. Higher values indicate more cooling energy." : null}
                               />
@@ -667,6 +751,7 @@ const App = () => {
                                 danfossValue={filteredData[selectedModel].danfoss?.btu} 
                                 copelandValue={filteredData[selectedModel].copeland?.btu} 
                                 icon={CheckCircle2}
+                                tooltip="BTU = British Thermal Units. Standard US cooling metric."
                                 isBetter={isBetter(filteredData[selectedModel].danfoss?.btu, filteredData[selectedModel].copeland?.btu)}
                                 explanation={explainMode ? "British Thermal Units per hour. Standard unit for cooling capacity." : null}
                               />
@@ -675,6 +760,7 @@ const App = () => {
                                 danfossValue={filteredData[selectedModel].danfoss?.dimensions} 
                                 copelandValue={filteredData[selectedModel].copeland?.dimensions} 
                                 icon={Maximize2}
+                                tooltip="Physical footprint. Smaller allows for easier retrofitting."
                                 explanation={explainMode ? "Physical size. Smaller dimensions often allow for more flexible installation." : null}
                               />
                               {filteredData[selectedModel].danfoss?.code && (
@@ -683,74 +769,30 @@ const App = () => {
                                   danfossValue={filteredData[selectedModel].danfoss?.code} 
                                   copelandValue="-" 
                                   icon={Filter}
+                                  tooltip="Use this exact code for procurement and ordering."
                                   explanation={explainMode ? "Unique identifier for placing orders with Danfoss." : null}
                                 />
                               )}
                             </>
                           )}
                         </div>
-
-                        <div className="mt-8 grid grid-cols-2 gap-4">
-                          <div className="p-4 bg-red-50 rounded-xl border border-red-100">
-                            <h5 className="text-red-900 font-bold text-sm mb-2 flex items-center gap-2">
-                              <CheckCircle2 className="w-4 h-4" /> Series Advantage
-                            </h5>
-                            <p className="text-xs text-red-700 leading-relaxed">
-                              {SERIES_INSIGHTS[filteredData[selectedModel].category]?.advantage}
-                            </p>
-                          </div>
-                          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                            <h5 className="text-slate-900 font-bold text-sm mb-2 flex items-center gap-2">
-                              <Maximize2 className="w-4 h-4" /> Application Fit
-                            </h5>
-                            <p className="text-xs text-slate-600 leading-relaxed">
-                              {SERIES_INSIGHTS[filteredData[selectedModel].category]?.fit}
-                            </p>
-                          </div>
-                        </div>
                       </div>
                     </Card>
                   </motion.div>
                 ) : (
-                  <div className="h-full flex flex-col items-center justify-center bg-white rounded-2xl border-2 border-dashed border-slate-200 p-12 text-center">
-                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                      <ArrowRightLeft className="w-10 h-10 text-slate-300" />
+                  <div className="h-full flex flex-col items-center justify-center bg-white/40 backdrop-blur-2xl border-2 border-dashed border-white/40 p-12 text-center rounded-2xl">
+                    <div className="w-20 h-20 bg-white/60 rounded-full flex items-center justify-center mb-6">
+                      <Brain className="w-10 h-10 text-red-300" />
                     </div>
-                    <h4 className="text-xl font-bold text-slate-800">Select a model or search across 120+ compressors</h4>
+                    <h4 className="text-xl font-bold text-slate-800">Describe your requirement or select a model</h4>
                     <p className="text-slate-500 max-w-xs mt-2">
-                      Hover or select a compressor model from the left to see how Danfoss stays ahead of the competition.
+                      Try typing "5 ton commercial" or select from the left to start an intelligent comparison.
                     </p>
                   </div>
                 )}
               </div>
             </div>
           </motion.div>
-        </section>
-
-        <section className="mt-24 pt-12 border-t border-slate-200">
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="space-y-4">
-              <div className="w-10 h-10 bg-red-600 text-white rounded-lg flex items-center justify-center font-bold">1</div>
-              <h5 className="text-lg font-bold">Unmatched Reliability</h5>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Advanced scroll design reduces moving parts, minimizing vibration and extending operational life even in harsh environments.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <div className="w-10 h-10 bg-red-600 text-white rounded-lg flex items-center justify-center font-bold">2</div>
-              <h5 className="text-lg font-bold">Global Support</h5>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Access Danfoss's global network of application experts and genuine spare parts wherever your systems are deployed.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <div className="w-10 h-10 bg-red-600 text-white rounded-lg flex items-center justify-center font-bold">3</div>
-              <h5 className="text-lg font-bold">Eco-Friendly</h5>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Optimized for next-generation low-GWP refrigerants, helping you meet environmental regulations without sacrificing performance.
-              </p>
-            </div>
-          </div>
         </section>
       </main>
 
@@ -787,15 +829,15 @@ const App = () => {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f5f9;
+          background: rgba(255, 255, 255, 0.1);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #cbd5e1;
+          background: rgba(220, 38, 38, 0.2);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #94a3b8;
+          background: rgba(220, 38, 38, 0.4);
         }
       `}} />
     </div>
