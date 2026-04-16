@@ -1,6 +1,4 @@
 import React, { useState, useMemo, useEffect, Suspense, useRef } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { 
   Search, 
   ChevronRight, 
@@ -15,7 +13,6 @@ import {
   AlertCircle,
   Brain,
   Layers,
-  Download,
   Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -205,46 +202,6 @@ const App = () => {
   const [explainMode, setExplainMode] = useState(false);
   const [activeUseCase, setActiveUseCase] = useState(null);
   const [scrollY, setScrollY] = useState(0);
-  const comparisonRef = useRef(null);
-
-  const handleExportPDF = async () => {
-    if (!comparisonRef.current) return;
-    
-    try {
-      const element = comparisonRef.current;
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: "#ffffff",
-        ignoreElements: (element) => {
-          // Ignore any elements that might be using complex modern CSS
-          const style = window.getComputedStyle(element);
-          return style.backdropFilter !== 'none' || style.filter.includes('blur');
-        },
-        onclone: (clonedDoc) => {
-          const allElements = clonedDoc.getElementsByTagName('*');
-          for (let i = 0; i < allElements.length; i++) {
-            const el = allElements[i];
-            // Force replace any modern CSS that html2canvas hates
-            el.style.backdropFilter = 'none';
-            el.style.filter = 'none';
-          }
-        }
-      });
-      
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Danfoss_Comparison_${filteredData[selectedModel]?.danfoss?.model || 'Report'}.pdf`);
-    } catch (error) {
-      console.error("PDF Export failed:", error);
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -605,13 +562,6 @@ const App = () => {
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                <button 
-                  onClick={handleExportPDF}
-                  className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm hover:border-red-200 hover:text-red-600 transition-all"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  Export PDF
-                </button>
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
                   <Filter className="w-4 h-4" />
                   <span>{filteredData.length} Models Found</span>
@@ -678,7 +628,7 @@ const App = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     key={selectedModel}
                   >
-                    <div ref={comparisonRef}>
+                    <div>
                       <div className="grid md:grid-cols-2 gap-4 mb-6">
                         <Card className="p-4 bg-green-50/50 border-green-100">
                           <div className="flex items-center gap-2 mb-2 text-green-800">
