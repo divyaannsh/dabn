@@ -13,7 +13,9 @@ import {
   AlertCircle,
   Brain,
   Layers,
-  Check
+  Check,
+  Menu,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -202,6 +204,7 @@ const App = () => {
   const [explainMode, setExplainMode] = useState(false);
   const [activeUseCase, setActiveUseCase] = useState(null);
   const [scrollY, setScrollY] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -340,18 +343,18 @@ const App = () => {
         )} 
       </AnimatePresence>
 
-      <nav className="sticky top-0 z-50 bg-white/40 backdrop-blur-2xl border-b border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.05)] px-6 py-4">
+      <nav className="sticky top-0 z-50 bg-white/40 backdrop-blur-2xl border-b border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.05)] px-4 md:px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4 group cursor-pointer">
-            <img src="/Outlook-kvcuysmb.png" alt="Danfoss Logo" className="h-10 w-auto" />
-            <div className="h-8 w-px bg-slate-200 hidden md:block" />
-            <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900">Staying Ahead</h1>
-              <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold">Compressor Comparison</p>
+          <div className="flex items-center gap-2 md:gap-4 group cursor-pointer">
+            <img src="/Outlook-kvcuysmb.png" alt="Danfoss Logo" className="h-8 md:h-10 w-auto" />
+            <div className="h-8 w-px bg-slate-200 hidden lg:block" />
+            <div className="hidden sm:block">
+              <h1 className="text-lg md:text-xl font-bold tracking-tight text-slate-900 leading-tight">Staying Ahead</h1>
+              <p className="text-[9px] md:text-[10px] uppercase tracking-widest text-red-600 font-bold">Compressor Comparison</p>
             </div>
           </div>
           
-          <div className="hidden md:flex items-center gap-1 bg-slate-100/50 p-1 rounded-xl">
+          <div className="hidden lg:flex items-center gap-1 bg-slate-100/50 p-1 rounded-xl">
             {Object.keys(COMPRESSOR_DATA).map(tab => (
               <button
                 key={tab}
@@ -367,20 +370,21 @@ const App = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={() => setExplainMode(!explainMode)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+              className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-bold transition-all border ${
                 explainMode 
                   ? "bg-red-600 text-white border-red-600 shadow-lg shadow-red-200" 
                   : "bg-white text-slate-500 border-slate-200 hover:border-red-200 hover:text-red-600"
               }`}
             >
-              <Info className="w-3.5 h-3.5" />
-              {explainMode ? "Explain Mode ON" : "Explain Mode OFF"}
+              <Info className="w-3 md:w-3.5 h-3 md:h-3.5" />
+              <span className="hidden xs:inline">{explainMode ? "Explain Mode ON" : "Explain Mode OFF"}</span>
+              <span className="xs:hidden">{explainMode ? "ON" : "OFF"}</span>
             </button>
 
-            <div className="relative">
+            <div className="relative hidden md:block">
               <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${searchQuery ? "text-red-600" : "text-slate-400"}`} />
               <input 
                 type="text"
@@ -390,13 +394,63 @@ const App = () => {
                   setSearchQuery(e.target.value);
                   setSelectedModel(null);
                 }}
-                className={`pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-100 rounded-xl text-sm w-64 transition-all outline-none ${
+                className={`pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-100 rounded-xl text-sm w-48 lg:w-64 transition-all outline-none ${
                   searchQuery ? "ring-2 ring-red-200 bg-white" : ""
                 }`}
               />
             </div>
+
+            <button 
+              className="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden mt-4 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden"
+            >
+              <div className="p-4 space-y-4">
+                <div className="relative md:hidden">
+                  <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${searchQuery ? "text-red-600" : "text-slate-400"}`} />
+                  <input 
+                    type="text"
+                    placeholder="Describe requirement..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setSelectedModel(null);
+                    }}
+                    className="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-100"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.keys(COMPRESSOR_DATA).map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => { setActiveTab(tab); setSelectedModel(null); setActiveUseCase(null); setMobileMenuOpen(false); }}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                        activeTab === tab && !activeUseCase
+                          ? "bg-red-600 text-white" 
+                          : "bg-slate-100 text-slate-600"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 py-12 relative">
@@ -404,58 +458,58 @@ const App = () => {
         <div className="absolute top-40 right-10 w-48 h-48 bg-blue-200/10 blur-3xl rounded-full animate-bounce z-0" />
 
         <section className="mb-16 relative z-10" id="hero" style={{ transform: `translateY(${scrollY * 0.1}px)` }}>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
+              className="text-center lg:text-left"
             >
               <Badge variant="red">Efficiency First</Badge>
-              <h2 className="text-5xl font-black text-slate-900 mt-4 leading-tight">
-                Superior Performance <br/>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mt-4 leading-tight">
+                Superior Performance <br className="hidden sm:block"/>
                 <span className="text-red-600">By Design.</span>
               </h2>
-              <p className="text-lg text-slate-600 mt-6 leading-relaxed max-w-lg">
+              <p className="text-base md:text-lg text-slate-600 mt-6 leading-relaxed max-w-lg mx-auto lg:mx-0">
                 Compare Danfoss scroll compressors with industry alternatives. 
-                Experience the "Staying Ahead" advantage with optimized cooling capacity, 
-                reduced footprint, and industry-leading reliability.
+                Experience the "Staying Ahead" advantage with optimized cooling capacity.
               </p>
               
-              <div className="flex flex-wrap gap-2 mt-8">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-2 mt-8">
                 {USE_CASES.map(uc => (
                   <button
                     key={uc.label}
                     onClick={() => { setActiveUseCase(uc.filter); setActiveTab(uc.filter); setSelectedModel(null); }}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border ${
+                    className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-full text-[10px] md:text-xs font-bold transition-all border ${
                       activeUseCase === uc.filter 
                         ? "bg-red-600 text-white border-red-600 shadow-lg shadow-red-100" 
                         : "bg-white text-slate-500 border-slate-200 hover:border-red-200 hover:text-red-600"
                     }`}
                   >
-                    <uc.icon className="w-3.5 h-3.5" />
+                    <uc.icon className="w-3 md:w-3.5 h-3 md:h-3.5" />
                     {uc.label}
                   </button>
                 ))}
               </div>
 
-              <div className="flex gap-4 mt-10">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                    <ShieldCheck className="w-6 h-6" />
+              <div className="flex justify-center lg:justify-start gap-4 md:gap-8 mt-10">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-10 md:w-12 h-10 md:h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                    <ShieldCheck className="w-5 md:w-6 h-5 md:h-6" />
                   </div>
-                  <div>
-                    <p className="font-bold text-slate-900 text-sm">Certified</p>
-                    <p className="text-xs text-slate-500">Industry Standards</p>
+                  <div className="text-left">
+                    <p className="font-bold text-slate-900 text-xs md:text-sm">Certified</p>
+                    <p className="text-[10px] text-slate-500">Industry Standards</p>
                   </div>
                 </div>
-                <div className="w-px h-12 bg-slate-200 mx-2" />
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600">
-                    <Award className="w-6 h-6" />
+                <div className="w-px h-10 md:h-12 bg-slate-200" />
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-10 md:w-12 h-10 md:h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600">
+                    <Award className="w-5 md:w-6 h-5 md:h-6" />
                   </div>
-                  <div>
-                    <p className="font-bold text-slate-900 text-sm">Premium</p>
-                    <p className="text-xs text-slate-500">Quality Assured</p>
+                  <div className="text-left">
+                    <p className="font-bold text-slate-900 text-xs md:text-sm">Premium</p>
+                    <p className="text-[10px] text-slate-500">Quality Assured</p>
                   </div>
                 </div>
               </div>
@@ -465,25 +519,25 @@ const App = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative"
+              className="relative max-w-md mx-auto lg:max-w-none w-full"
             >
               <div className="absolute -inset-4 bg-red-500/10 blur-3xl rounded-full" />
-              <Card className="relative p-8 bg-gradient-to-br from-red-600 to-red-800 text-white border-0 shadow-2xl">
-                <div className="flex justify-between items-start mb-8">
-                  <Zap className="w-10 h-10 text-red-200 fill-red-200" />
+              <Card className="relative p-6 md:p-8 bg-gradient-to-br from-red-600 to-red-800 text-white border-0 shadow-2xl">
+                <div className="flex justify-between items-start mb-6 md:mb-8">
+                  <Zap className="w-8 md:w-10 h-8 md:h-10 text-red-200 fill-red-200" />
                   <div className="text-right">
-                    <p className="text-red-100 text-xs font-bold uppercase tracking-wider">Market Leader</p>
-                    <p className="text-2xl font-black">DANFOSS</p>
+                    <p className="text-red-100 text-[10px] md:text-xs font-bold uppercase tracking-wider">Market Leader</p>
+                    <p className="text-xl md:text-2xl font-black">DANFOSS</p>
                   </div>
                 </div>
-                <div className="space-y-6">
-                  <div className="p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-                    <p className="text-xs text-red-100 mb-1 font-medium">Core Advantage</p>
-                    <p className="text-sm font-semibold leading-snug">
+                <div className="space-y-4 md:space-y-6">
+                  <div className="p-3 md:p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+                    <p className="text-[10px] md:text-xs text-red-100 mb-1 font-medium">Core Advantage</p>
+                    <p className="text-xs md:text-sm font-semibold leading-snug">
                       Engineered for high-ambient performance and maximum energy efficiency across all applications.
                     </p>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 md:gap-4">
                     <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
@@ -493,7 +547,7 @@ const App = () => {
                       />
                     </div>
                     <div className="flex flex-col text-right">
-                      <span className="text-xs font-bold">{currentVerdict?.score || 95}% Match Confidence</span>
+                      <span className="text-[10px] md:text-xs font-bold whitespace-nowrap">{currentVerdict?.score || 95}% Match Confidence</span>
                       <span className="text-[8px] font-black uppercase tracking-tighter text-red-200">High Confidence</span>
                     </div>
                   </div>
@@ -503,41 +557,41 @@ const App = () => {
           </div>
         </section>
 
-        <section className="mb-24 relative z-10">
-          <div className="bg-white/40 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-8 rounded-3xl overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
+        <section className="mb-16 md:mb-24 relative z-10">
+          <div className="bg-white/40 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-6 md:p-8 rounded-2xl md:rounded-3xl overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-red-50 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
             <div className="relative z-10">
               <Badge variant="red">Series Insights</Badge>
-              <h3 className="text-3xl font-black text-slate-900 mt-4 mb-8">
+              <h3 className="text-2xl md:text-3xl font-black text-slate-900 mt-4 mb-6 md:mb-8">
                 {activeTab} Overview <br/>
                 <span className="text-red-600">The Danfoss Advantage.</span>
               </h3>
               
-              <div className="grid md:grid-cols-4 gap-6">
-                <div className="p-5 bg-white/60 rounded-2xl border border-white/40 md:col-span-2">
-                  <div className="w-10 h-10 bg-red-600 text-white rounded-lg flex items-center justify-center mb-4">
-                    <Info className="w-5 h-5" />
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div className="p-4 md:p-5 bg-white/60 rounded-xl md:rounded-2xl border border-white/40 sm:col-span-2">
+                  <div className="w-8 md:w-10 h-8 md:h-10 bg-red-600 text-white rounded-lg flex items-center justify-center mb-4">
+                    <Info className="w-4 md:w-5 h-4 md:h-5" />
                   </div>
-                  <h5 className="font-bold text-slate-900 mb-2">Series Summary</h5>
-                  <p className="text-sm text-slate-500 leading-relaxed">
+                  <h5 className="font-bold text-slate-900 text-sm md:text-base mb-2">Series Summary</h5>
+                  <p className="text-xs md:text-sm text-slate-500 leading-relaxed">
                     {SERIES_INSIGHTS[activeTab]?.summary}
                   </p>
                 </div>
-                <div className="p-5 bg-white/60 rounded-2xl border border-white/40">
-                  <div className="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
-                    <Zap className="w-5 h-5" />
+                <div className="p-4 md:p-5 bg-white/60 rounded-xl md:rounded-2xl border border-white/40">
+                  <div className="w-8 md:w-10 h-8 md:h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+                    <Zap className="w-4 md:w-5 h-4 md:h-5" />
                   </div>
-                  <h5 className="font-bold text-slate-900 mb-2">Core Strength</h5>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <h5 className="font-bold text-slate-900 text-sm md:text-base mb-2">Core Strength</h5>
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
                     {SERIES_INSIGHTS[activeTab]?.advantage}
                   </p>
                 </div>
-                <div className="p-5 bg-white/60 rounded-2xl border border-white/40">
-                  <div className="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-4">
-                    <ArrowRightLeft className="w-5 h-5" />
+                <div className="p-4 md:p-5 bg-white/60 rounded-xl md:rounded-2xl border border-white/40">
+                  <div className="w-8 md:w-10 h-8 md:h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-4">
+                    <ArrowRightLeft className="w-4 md:w-5 h-4 md:h-5" />
                   </div>
-                  <h5 className="font-bold text-slate-900 mb-2">Seamless Fit</h5>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <h5 className="font-bold text-slate-900 text-sm md:text-base mb-2">Seamless Fit</h5>
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
                     {SERIES_INSIGHTS[activeTab]?.fit}
                   </p>
                 </div>
@@ -552,25 +606,25 @@ const App = () => {
             initial={{ opacity: 0, y: 10 }} 
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
               <div>
-                <h3 className="text-2xl font-bold text-slate-900">
+                <h3 className="text-xl md:text-2xl font-bold text-slate-900">
                   {searchQuery ? "Intelligent Results" : `${activeTab} Comparison`}
                 </h3>
-                <p className="text-slate-500 text-sm">
-                  {searchQuery ? `Analyzing requirements for "${searchQuery}"` : "Select a model to view detailed technical specifications"}
+                <p className="text-slate-500 text-xs md:text-sm">
+                  {searchQuery ? `Analyzing requirements for "${searchQuery}"` : "Select a model for technical specifications"}
                 </p>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
-                  <Filter className="w-4 h-4" />
+              <div className="flex items-center gap-2 md:gap-4">
+                <div className="flex items-center gap-2 text-xs md:text-sm font-medium text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                  <Filter className="w-3.5 md:w-4 h-3.5 md:h-4" />
                   <span>{filteredData.length} Models Found</span>
                 </div>
               </div>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
+              <div className="lg:col-span-1 space-y-3 max-h-[400px] lg:max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
                 <AnimatePresence mode="popLayout">
                   {filteredData.map((item, idx) => {
                     const modelName = item.danfoss?.model || item.danfoss?.mt || "N/A";
@@ -582,9 +636,9 @@ const App = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        onClick={() => setSelectedModel(idx)}
-                        onMouseEnter={() => setSelectedModel(idx)}
-                        className={`group p-4 rounded-xl cursor-pointer transition-all border-2 ${
+                        onClick={() => { setSelectedModel(idx); if (window.innerWidth < 1024) { window.scrollTo({ top: document.getElementById('details-section').offsetTop - 100, behavior: 'smooth' }); }}}
+                        onMouseEnter={() => { if (window.innerWidth >= 1024) setSelectedModel(idx); }}
+                        className={`group p-3 md:p-4 rounded-xl cursor-pointer transition-all border-2 ${
                           isSelected 
                             ? "bg-white border-red-600 shadow-md ring-4 ring-red-50" 
                             : "bg-white border-transparent hover:border-slate-200 shadow-sm hover:shadow-md"
@@ -592,28 +646,23 @@ const App = () => {
                       >
                         <div className="flex justify-between items-center">
                           <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                            <div className={`w-8 md:w-10 h-8 md:h-10 rounded-lg flex items-center justify-center transition-colors ${
                               isSelected ? "bg-red-600 text-white" : "bg-red-50 text-red-600"
                             }`}>
-                              <Maximize2 className="w-5 h-5" />
+                              <Maximize2 className="w-4 md:w-5 h-4 md:h-5" />
                             </div>
                             <div>
-                              <p className={`font-bold text-sm ${isSelected ? "text-slate-900" : "text-slate-700"}`}>
+                              <p className={`font-bold text-xs md:text-sm ${isSelected ? "text-slate-900" : "text-slate-700"}`}>
                                 {modelName}
                               </p>
                               <div className="flex flex-col gap-0.5 mt-0.5">
-                                <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">
-                                  Capacity: {item.danfoss?.tr || item.danfoss?.capacity} TR
+                                <p className="text-[9px] md:text-[10px] text-slate-400 font-bold tracking-widest uppercase">
+                                  {item.danfoss?.tr || item.danfoss?.capacity} TR
                                 </p>
-                                {(searchQuery || isSelected) && (
-                                  <p className="text-[9px] text-red-500/80 font-black tracking-tighter uppercase italic">
-                                    Series: {item.category}
-                                  </p>
-                                )}
                               </div>
                             </div>
                           </div>
-                          <ChevronRight className={`w-5 h-5 transition-transform ${isSelected ? "text-red-600 translate-x-1" : "text-slate-300"}`} />
+                          <ChevronRight className={`w-4 md:w-5 h-4 md:h-5 transition-transform ${isSelected ? "text-red-600 translate-x-1" : "text-slate-300"}`} />
                         </div>
                       </motion.div>
                     );
@@ -621,169 +670,167 @@ const App = () => {
                 </AnimatePresence>
               </div>
 
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2" id="details-section">
                 {selectedModel !== null ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
                     key={selectedModel}
                   >
-                    <div>
-                      <div className="grid md:grid-cols-2 gap-4 mb-6">
-                        <Card className="p-4 bg-green-50/50 border-green-100">
-                          <div className="flex items-center gap-2 mb-2 text-green-800">
-                            <Check className="w-4 h-4" />
-                            <h4 className="font-bold text-sm">Final Verdict</h4>
-                          </div>
-                          <p className="text-xs text-green-700 leading-relaxed">
-                            Danfoss outperforms Copeland in {currentVerdict?.wins}/{currentVerdict?.total} key technical metrics for this specific selection.
-                          </p>
-                        </Card>
-                        <Card className="p-4 bg-red-50/50 border-red-100">
-                          <div className="flex items-center gap-2 mb-2 text-red-800">
-                            <Zap className="w-4 h-4" />
-                            <h4 className="font-bold text-sm">Smart Suggestion</h4>
-                          </div>
-                          <p className="text-xs text-red-700 leading-relaxed">
-                            Ideal for {filteredData[selectedModel].category === 'MLZ' ? 'Refrigeration' : 'High-Ambient AC'} use cases.
-                          </p>
-                        </Card>
-                      </div>
-
-                      <Card className="h-full border-slate-200">
-                        <div className="bg-red-600 p-6 text-white flex justify-between items-center">
-                          <div>
-                            <p className="text-red-200 text-xs font-bold uppercase tracking-widest mb-1">Detailed Technical View</p>
-                            <h4 className="text-2xl font-bold">
-                              {filteredData[selectedModel].danfoss?.model || filteredData[selectedModel].danfoss?.mt}
-                            </h4>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <div className="text-right">
-                              <p className="text-[10px] text-red-100 uppercase font-bold">Match Score</p>
-                              <p className="text-2xl font-black">{currentVerdict?.score}%</p>
-                            </div>
-                            <ArrowRightLeft className="w-8 h-8 text-white/30" />
-                          </div>
+                    <div className="grid sm:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
+                      <Card className="p-3 md:p-4 bg-green-50/50 border-green-100">
+                        <div className="flex items-center gap-2 mb-1.5 md:mb-2 text-green-800">
+                          <Check className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                          <h4 className="font-bold text-xs md:text-sm">Final Verdict</h4>
                         </div>
-                        
-                        <div className="p-8">
-                          <div className="grid grid-cols-12 mb-2 bg-yellow-400 p-3 rounded-t-xl border-x border-t border-slate-300 sticky top-0 z-10 shadow-sm">
-                            <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider flex items-center">Technical Specs</div>
-                            <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Danfoss Performance</div>
-                            <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Copeland Equivalent</div>
-                          </div>
-
-                          <div className="bg-white rounded-b-xl overflow-hidden border border-slate-300 shadow-sm">
-                            {filteredData[selectedModel].category === "MT_MTZ" ? (
-                              <>
-                                <ComparisonRow 
-                                  label="Model Variant" 
-                                  danfossValue={`MT: ${filteredData[selectedModel].danfoss?.mt} / MTZ: ${filteredData[selectedModel].danfoss?.mtz}`} 
-                                  copelandValue={filteredData[selectedModel].copeland?.model} 
-                                  icon={Maximize2}
-                                  tooltip="Danfoss MT/MTZ offers flexibility for various refrigeration oils."
-                                  explanation={explainMode ? "Different variants optimized for specific refrigerants and oil types." : null}
-                                />
-                                <ComparisonRow 
-                                  label="Capacity (TR)" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.capacity} 
-                                  copelandValue={filteredData[selectedModel].copeland?.capacity} 
-                                  icon={Zap}
-                                  tooltip="TR = Tons of Refrigeration. 1 TR = 3.5 kW."
-                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.capacity, filteredData[selectedModel].copeland?.capacity)}
-                                  explanation={explainMode ? "Tonnage Refrigeration (TR) defines the cooling power. Higher is better for larger spaces." : null}
-                                />
-                              </>
-                            ) : (
-                              <>
-                                <ComparisonRow 
-                                  label="Model Number" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.model} 
-                                  copelandValue={filteredData[selectedModel].copeland?.model} 
-                                  icon={Maximize2}
-                                  isSubHeader={true}
-                                />
-                                {filteredData[selectedModel].danfoss?.type && (
-                                  <ComparisonRow 
-                                    label="Compressor Type" 
-                                    danfossValue={filteredData[selectedModel].danfoss?.type} 
-                                    copelandValue={filteredData[selectedModel].copeland?.type} 
-                                    icon={Info}
-                                    tooltip="Mechanical architecture: S3 vs S4 optimization."
-                                    explanation={explainMode ? "Defines the internal mechanical architecture of the scroll." : null}
-                                  />
-                                )}
-                                {filteredData[selectedModel].category === "DSH" && (
-                                  <ComparisonRow 
-                                    label="Frequency (Hz)" 
-                                    danfossValue={`${filteredData[selectedModel].hz} Hz`} 
-                                    copelandValue="-" 
-                                    icon={Info}
-                                    tooltip="Operational frequency standard for regional power grids."
-                                    explanation={explainMode ? "Standard electrical frequency for the application region." : null}
-                                  />
-                                )}
-                                <ComparisonRow 
-                                  label="Capacity (TR)" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.tr} 
-                                  copelandValue={filteredData[selectedModel].copeland?.tr} 
-                                  icon={Zap}
-                                  tooltip="Cooling capacity in tons. 1 TR = 12,000 BTU/hr."
-                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.tr, filteredData[selectedModel].copeland?.tr)}
-                                  explanation={explainMode ? "Total cooling capacity in Tons of Refrigeration." : null}
-                                />
-                                <ComparisonRow 
-                                  label="Cooling (W)" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.w} 
-                                  copelandValue={filteredData[selectedModel].copeland?.w} 
-                                  icon={CheckCircle2}
-                                  tooltip="Wattage defines total electrical cooling power."
-                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.w, filteredData[selectedModel].copeland?.w)}
-                                  explanation={explainMode ? "Cooling power measured in Watts. Higher values indicate more cooling energy." : null}
-                                />
-                                <ComparisonRow 
-                                  label="Cooling (Btu/hr)" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.btu} 
-                                  copelandValue={filteredData[selectedModel].copeland?.btu} 
-                                  icon={CheckCircle2}
-                                  tooltip="BTU = British Thermal Units. Standard US cooling metric."
-                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.btu, filteredData[selectedModel].copeland?.btu)}
-                                  explanation={explainMode ? "British Thermal Units per hour. Standard unit for cooling capacity." : null}
-                                />
-                                <ComparisonRow 
-                                  label="Dimensions (mm)" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.dimensions} 
-                                  copelandValue={filteredData[selectedModel].copeland?.dimensions} 
-                                  icon={Maximize2}
-                                  tooltip="Physical footprint. Smaller allows for easier retrofitting."
-                                  explanation={explainMode ? "Physical size. Smaller dimensions often allow for more flexible installation." : null}
-                                />
-                                {filteredData[selectedModel].danfoss?.code && (
-                                  <ComparisonRow 
-                                    label="Ordering Code" 
-                                    danfossValue={filteredData[selectedModel].danfoss?.code} 
-                                    copelandValue="-" 
-                                    icon={Filter}
-                                    tooltip="Use this exact code for procurement and ordering."
-                                    explanation={explainMode ? "Unique identifier for placing orders with Danfoss." : null}
-                                  />
-                                )}
-                              </>
-                            )}
-                          </div>
+                        <p className="text-[10px] md:text-xs text-green-700 leading-relaxed">
+                          Danfoss outperforms Copeland in {currentVerdict?.wins}/{currentVerdict?.total} key technical metrics.
+                        </p>
+                      </Card>
+                      <Card className="p-3 md:p-4 bg-red-50/50 border-red-100">
+                        <div className="flex items-center gap-2 mb-1.5 md:mb-2 text-red-800">
+                          <Zap className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                          <h4 className="font-bold text-xs md:text-sm">Smart Suggestion</h4>
                         </div>
+                        <p className="text-[10px] md:text-xs text-red-700 leading-relaxed">
+                          Ideal for {filteredData[selectedModel].category === 'MLZ' ? 'Refrigeration' : 'High-Ambient AC'} use cases.
+                        </p>
                       </Card>
                     </div>
+
+                    <Card className="h-full border-slate-200">
+                      <div className="bg-red-600 p-4 md:p-6 text-white flex justify-between items-center">
+                        <div>
+                          <p className="text-red-200 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1">Detailed Technical View</p>
+                          <h4 className="text-xl md:text-2xl font-bold">
+                            {filteredData[selectedModel].danfoss?.model || filteredData[selectedModel].danfoss?.mt}
+                          </h4>
+                        </div>
+                        <div className="flex items-center gap-2 md:gap-4">
+                          <div className="text-right hidden sm:block">
+                            <p className="text-[9px] md:text-[10px] text-red-100 uppercase font-bold">Match Score</p>
+                            <p className="text-xl md:text-2xl font-black">{currentVerdict?.score}%</p>
+                          </div>
+                          <ArrowRightLeft className="w-6 md:w-8 h-6 md:h-8 text-white/30" />
+                        </div>
+                      </div>
+                      
+                      <div className="p-4 md:p-8">
+                        <div className="grid grid-cols-12 mb-2 bg-yellow-400 p-2 md:p-3 rounded-t-xl border-x border-t border-slate-300 sticky top-0 z-10 shadow-sm">
+                          <div className="col-span-4 text-[8px] md:text-[10px] font-black text-slate-900 uppercase tracking-wider flex items-center">Specs</div>
+                          <div className="col-span-4 text-[8px] md:text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-2 md:px-3 text-center sm:text-left">Danfoss</div>
+                          <div className="col-span-4 text-[8px] md:text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-2 md:px-3 text-center sm:text-left">Copeland</div>
+                        </div>
+
+                        <div className="bg-white rounded-b-xl overflow-hidden border border-slate-300 shadow-sm">
+                          {filteredData[selectedModel].category === "MT_MTZ" ? (
+                            <>
+                              <ComparisonRow 
+                                label="Variant" 
+                                danfossValue={`MT: ${filteredData[selectedModel].danfoss?.mt} / MTZ: ${filteredData[selectedModel].danfoss?.mtz}`} 
+                                copelandValue={filteredData[selectedModel].copeland?.model} 
+                                icon={Maximize2}
+                                tooltip="Danfoss MT/MTZ offers flexibility for various refrigeration oils."
+                                explanation={explainMode ? "Different variants optimized for specific refrigerants and oil types." : null}
+                              />
+                              <ComparisonRow 
+                                label="TR" 
+                                danfossValue={filteredData[selectedModel].danfoss?.capacity} 
+                                copelandValue={filteredData[selectedModel].copeland?.capacity} 
+                                icon={Zap}
+                                tooltip="TR = Tons of Refrigeration. 1 TR = 3.5 kW."
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.capacity, filteredData[selectedModel].copeland?.capacity)}
+                                explanation={explainMode ? "Tonnage Refrigeration (TR) defines the cooling power." : null}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <ComparisonRow 
+                                label="Model" 
+                                danfossValue={filteredData[selectedModel].danfoss?.model} 
+                                copelandValue={filteredData[selectedModel].copeland?.model} 
+                                icon={Maximize2}
+                                isSubHeader={true}
+                              />
+                              {filteredData[selectedModel].danfoss?.type && (
+                                <ComparisonRow 
+                                  label="Type" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.type} 
+                                  copelandValue={filteredData[selectedModel].copeland?.type} 
+                                  icon={Info}
+                                  tooltip="Mechanical architecture: S3 vs S4 optimization."
+                                  explanation={explainMode ? "Defines the internal mechanical architecture." : null}
+                                />
+                              )}
+                              {filteredData[selectedModel].category === "DSH" && (
+                                <ComparisonRow 
+                                  label="Hz" 
+                                  danfossValue={`${filteredData[selectedModel].hz} Hz`} 
+                                  copelandValue="-" 
+                                  icon={Info}
+                                  tooltip="Operational frequency standard."
+                                  explanation={explainMode ? "Standard electrical frequency." : null}
+                                />
+                              )}
+                              <ComparisonRow 
+                                label="TR" 
+                                danfossValue={filteredData[selectedModel].danfoss?.tr} 
+                                copelandValue={filteredData[selectedModel].copeland?.tr} 
+                                icon={Zap}
+                                tooltip="Cooling capacity in tons. 1 TR = 12,000 BTU/hr."
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.tr, filteredData[selectedModel].copeland?.tr)}
+                                explanation={explainMode ? "Total cooling capacity in Tons of Refrigeration." : null}
+                              />
+                              <ComparisonRow 
+                                label="W" 
+                                danfossValue={filteredData[selectedModel].danfoss?.w} 
+                                copelandValue={filteredData[selectedModel].copeland?.w} 
+                                icon={CheckCircle2}
+                                tooltip="Wattage defines total electrical cooling power."
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.w, filteredData[selectedModel].copeland?.w)}
+                                explanation={explainMode ? "Cooling power measured in Watts." : null}
+                              />
+                              <ComparisonRow 
+                                label="Btu/hr" 
+                                danfossValue={filteredData[selectedModel].danfoss?.btu} 
+                                copelandValue={filteredData[selectedModel].copeland?.btu} 
+                                icon={CheckCircle2}
+                                tooltip="BTU = British Thermal Units. Standard US cooling metric."
+                                isBetter={isBetter(filteredData[selectedModel].danfoss?.btu, filteredData[selectedModel].copeland?.btu)}
+                                explanation={explainMode ? "British Thermal Units per hour." : null}
+                              />
+                              <ComparisonRow 
+                                label="mm" 
+                                danfossValue={filteredData[selectedModel].danfoss?.dimensions} 
+                                copelandValue={filteredData[selectedModel].copeland?.dimensions} 
+                                icon={Maximize2}
+                                tooltip="Physical footprint. Smaller allows for easier retrofitting."
+                                explanation={explainMode ? "Physical size." : null}
+                              />
+                              {filteredData[selectedModel].danfoss?.code && (
+                                <ComparisonRow 
+                                  label="Code" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.code} 
+                                  copelandValue="-" 
+                                  icon={Filter}
+                                  tooltip="Use this exact code for procurement and ordering."
+                                  explanation={explainMode ? "Unique identifier for placing orders." : null}
+                                />
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
                   </motion.div>
                 ) : (
-                  <div className="h-full flex flex-col items-center justify-center bg-white/40 backdrop-blur-2xl border-2 border-dashed border-white/40 p-12 text-center rounded-2xl">
-                    <div className="w-20 h-20 bg-white/60 rounded-full flex items-center justify-center mb-6">
-                      <Brain className="w-10 h-10 text-red-300" />
+                  <div className="h-full flex flex-col items-center justify-center bg-white/40 backdrop-blur-2xl border-2 border-dashed border-white/40 p-8 md:p-12 text-center rounded-2xl min-h-[300px]">
+                    <div className="w-16 md:w-20 h-16 md:h-20 bg-white/60 rounded-full flex items-center justify-center mb-6">
+                      <Brain className="w-8 md:w-10 h-8 md:h-10 text-red-300" />
                     </div>
-                    <h4 className="text-xl font-bold text-slate-800">Describe your requirement or select a model</h4>
-                    <p className="text-slate-500 max-w-xs mt-2">
-                      Try typing "5 ton commercial" or select from the left to start an intelligent comparison.
+                    <h4 className="text-lg md:text-xl font-bold text-slate-800 px-4">Describe requirement or select a model</h4>
+                    <p className="text-slate-500 max-w-xs mt-2 text-xs md:text-sm px-4">
+                      Try "5 ton commercial" or select from the list.
                     </p>
                   </div>
                 )}
