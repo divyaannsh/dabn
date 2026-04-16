@@ -1,0 +1,1519 @@
+{
+  "H series": [
+    {
+      "danfoss": {
+        "model": "HRP025",
+        "tr": 2,
+        "w": 7034,
+        "btu": 24000,
+        "dimensions": "165 × 165 × 413",
+        "code": "121L3086"
+      },
+      "copeland": {
+        "model": "ZR25K-PFV",
+        "tr": 2.1,
+        "w": 7400,
+        "btu": 25200,
+        "dimensions": "241×241×403"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP032",
+        "tr": 2.5,
+        "w": 8793,
+        "btu": 30000,
+        "dimensions": "181 × 181 × 430",
+        "code": "121L3345"
+      },
+      "copeland": {
+        "model": "ZR28K / ZR32K",
+        "tr": "2.3–2.7",
+        "w": "8,200-9,300",
+        "btu": "28,000-32,000",
+        "dimensions": "242×242×410"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP038",
+        "tr": 3,
+        "w": 10551,
+        "btu": 36000,
+        "dimensions": "181 × 181 × 430",
+        "code": "121L3353"
+      },
+      "copeland": {
+        "model": "ZR34K / ZR36K",
+        "tr": "2.8–3.0",
+        "w": "9,900-10,500",
+        "btu": "34,000-36,000",
+        "dimensions": "242×242×410"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP042T1LP6",
+        "tr": 3.5,
+        "w": 12310,
+        "btu": 42000,
+        "dimensions": "185 × 185 × 440",
+        "code": "121L3094"
+      },
+      "copeland": {
+        "model": "ZR40K / ZR42K",
+        "tr": "3.3–3.5",
+        "w": "11,700-12,300",
+        "btu": "40,000-42,000",
+        "dimensions": "246×246×420"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP047U1LP6",
+        "tr": 4,
+        "w": 14068,
+        "btu": 48000,
+        "dimensions": "185 × 185 × 450",
+        "code": "121L3347"
+      },
+      "copeland": {
+        "model": "ZR47K-PFV",
+        "tr": 4,
+        "w": 14000,
+        "btu": 47000,
+        "dimensions": "246×246×430"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRM054U1LP6",
+        "tr": 4.5,
+        "w": 15827,
+        "btu": 54000,
+        "dimensions": "185 × 185 × 460",
+        "code": "121L3349"
+      },
+      "copeland": {
+        "model": "ZR54K-TF5",
+        "tr": 4.5,
+        "w": 15800,
+        "btu": 54000,
+        "dimensions": "246×246×440"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP060T1LP6",
+        "tr": 5,
+        "w": 17585,
+        "btu": 60000,
+        "dimensions": "185 × 185 × 460",
+        "code": "121L3070"
+      },
+      "copeland": {
+        "model": "ZR57K / ZR61K",
+        "tr": "4.8–5.1",
+        "w": "16,700-17,900",
+        "btu": "57,000-61,000",
+        "dimensions": "246×246×440"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP042U2LP6",
+        "tr": 3.5,
+        "w": 12310,
+        "btu": 42000,
+        "dimensions": "185 × 185 × 440",
+        "code": "121L1106"
+      },
+      "copeland": {
+        "model": "ZR42K-TF5",
+        "tr": 3.5,
+        "w": 12300,
+        "btu": 42000,
+        "dimensions": "246×246×420"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP047T2LP6",
+        "tr": 4,
+        "w": 14068,
+        "btu": 48000,
+        "dimensions": "185 × 185 × 450",
+        "code": "121L1126"
+      },
+      "copeland": {
+        "model": "ZR47K-TF5",
+        "tr": 4,
+        "w": 14000,
+        "btu": 47000,
+        "dimensions": "246×246×430"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP054U2LP6",
+        "tr": 4.5,
+        "w": 15827,
+        "btu": 54000,
+        "dimensions": "185 × 185 × 460",
+        "code": "121L3351"
+      },
+      "copeland": {
+        "model": "ZR54K-TF5",
+        "tr": 4.5,
+        "w": 15800,
+        "btu": 54000,
+        "dimensions": "246×246×440"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP060T2LP6",
+        "tr": 5,
+        "w": 17585,
+        "btu": 60000,
+        "dimensions": "185 × 185 × 460",
+        "code": "121L2297"
+      },
+      "copeland": {
+        "model": "ZR57K / ZR61K (TF5)",
+        "tr": "4.8–5.1",
+        "w": "16,700-17,900",
+        "btu": "57,000-61,000",
+        "dimensions": "246×246×440"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HLP068T2LC6",
+        "tr": 5.5,
+        "w": 19344,
+        "btu": 66000,
+        "dimensions": "224 × 224 × 470",
+        "code": "121L3276"
+      },
+      "copeland": {
+        "model": "ZR61K / ZR72K",
+        "tr": "5.1–6.0",
+        "w": "17,900-21,100",
+        "btu": "61,000-72,000"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HLP075T2LC6",
+        "tr": 6,
+        "w": 21102,
+        "btu": 72000,
+        "dimensions": "224 × 224 × 480",
+        "code": "121L3098"
+      },
+      "copeland": {
+        "model": "ZR72K-TF5",
+        "tr": 6,
+        "w": 21100,
+        "btu": 72000,
+        "dimensions": "254×254×460"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HLP081T2LC6",
+        "tr": 7,
+        "w": 24619,
+        "btu": 84000,
+        "dimensions": "224 × 224 × 490",
+        "code": "121L1916"
+      },
+      "copeland": {
+        "model": "ZR81KC-TF5",
+        "tr": 6.8,
+        "w": 24000,
+        "btu": 81000,
+        "dimensions": "254×254×470"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HCP094T2LC6",
+        "tr": 8,
+        "w": 28136,
+        "btu": 96000,
+        "dimensions": "254 × 254 × 500",
+        "code": "HCP094T2LC6"
+      },
+      "copeland": {
+        "model": "ZR94KC-TF5",
+        "tr": 7.8,
+        "w": 27500,
+        "btu": 94000,
+        "dimensions": "254×254×480"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HCP120T2LC6",
+        "tr": 10,
+        "w": 35170,
+        "btu": 120000,
+        "dimensions": "280 × 280 × 530",
+        "code": "121L0766"
+      },
+      "copeland": {
+        "model": "ZR125KC / ZR12M3",
+        "tr": "10.4–10.5",
+        "w": "36,600-37,000",
+        "btu": "125,000-126,000",
+        "dimensions": "280×280×530"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP047T4LP6",
+        "tr": 4,
+        "w": 120000,
+        "btu": 120000,
+        "dimensions": "185 × 185 × 450",
+        "code": "121L1046"
+      },
+      "copeland": {
+        "model": "ZR47K-TFD",
+        "tr": 4,
+        "w": 14000,
+        "btu": 47000,
+        "dimensions": "246×246×430"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP054T4LP6",
+        "tr": 4.5,
+        "w": 15827,
+        "btu": 54000,
+        "dimensions": "185 × 185 × 460",
+        "code": "121L1691"
+      },
+      "copeland": {
+        "model": "ZR54K-TFD",
+        "tr": 4.5,
+        "w": 15800,
+        "btu": 54000,
+        "dimensions": "246×246×440"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HRP060T4LP6",
+        "tr": 5,
+        "w": 17585,
+        "btu": 60000,
+        "dimensions": "185 × 185 × 460",
+        "code": "121L1726"
+      },
+      "copeland": {
+        "model": "ZR57K / ZR61K (TFD)",
+        "tr": "4.8–5.1",
+        "w": "16,700-17,900",
+        "btu": "57,000-61,000",
+        "dimensions": "246×246×440"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HLP068T4LC6",
+        "tr": 5.2,
+        "w": 18288,
+        "btu": 62400,
+        "dimensions": "224 × 224 × 470",
+        "code": "121L2014"
+      },
+      "copeland": {
+        "model": "ZR61K / ZR72K",
+        "tr": "5.1–6.0",
+        "w": "17,900-21,100",
+        "btu": "61,000-72,000"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HLP075T4LC6",
+        "tr": 6,
+        "w": 21102,
+        "btu": 72000,
+        "dimensions": "224 × 224 × 480",
+        "code": "121L1766"
+      },
+      "copeland": {
+        "model": "ZR72K-TFD",
+        "tr": 6,
+        "w": 21100,
+        "btu": 72000,
+        "dimensions": "254×254×460"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HLP081T4LC6",
+        "tr": 7,
+        "w": 24619,
+        "btu": 84000,
+        "dimensions": "224 × 224 × 490",
+        "code": "121L1781"
+      },
+      "copeland": {
+        "model": "ZR81KC-TFD",
+        "tr": 6.8,
+        "w": 24000,
+        "btu": 81000,
+        "dimensions": "254×254×470"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HCP094T4LC6",
+        "tr": 8,
+        "w": 28136,
+        "btu": 96000,
+        "dimensions": "254 × 254 × 500",
+        "code": "121L0601"
+      },
+      "copeland": {
+        "model": "ZR94KC-TFD",
+        "tr": 7.8,
+        "w": 27500,
+        "btu": 94000,
+        "dimensions": "254×254×480"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HCP109T4LC6",
+        "tr": 9,
+        "w": 31653,
+        "btu": 108000,
+        "dimensions": "254 × 254 × 510",
+        "code": "121L0376"
+      },
+      "copeland": {
+        "model": "ZR108KC / ZR11M3",
+        "tr": 9,
+        "w": 31600,
+        "btu": 108000,
+        "dimensions": "280×280×520"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "HCP120T4LC6",
+        "tr": 10,
+        "w": 35170,
+        "btu": 120000,
+        "dimensions": "280 × 280 × 530",
+        "code": "121L0401"
+      },
+      "copeland": {
+        "model": "ZR12M3-TWD",
+        "tr": 10.5,
+        "w": 37000,
+        "btu": 126000,
+        "dimensions": "280×280×540"
+      }
+    }
+  ],
+  "S series": [
+    {
+      "danfoss": {
+        "model": "SM090S3VC",
+        "type": "S3",
+        "tr": 7.5,
+        "w": 26.4,
+        "btu": 90000,
+        "dimensions": "465 × 280 × 280",
+        "code": " SM090-3VI"
+      },
+      "copeland": {
+        "model": "ZR94KC-TF5",
+        "type": "S3",
+        "tr": 7.8,
+        "w": 27.4,
+        "btu": 94000,
+        "dimensions": "457 × 279 × 279"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM090S4VC",
+        "type": "S4",
+        "tr": 7.5,
+        "w": 26.4,
+        "btu": 90000,
+        "dimensions": "465 × 280 × 280",
+        "code": " SM090-4VI"
+      },
+      "copeland": {
+        "model": "ZR94KC-TFD",
+        "type": "S4",
+        "tr": 7.8,
+        "w": 27.4,
+        "btu": 94000,
+        "dimensions": "457 × 279 × 279"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM115S3QC",
+        "type": "S3",
+        "tr": 9.3,
+        "w": 32.7,
+        "btu": 111600,
+        "dimensions": "505 × 300 × 300",
+        "code": "SM115-3QAI"
+      },
+      "copeland": {
+        "model": "ZR11M3-TWC",
+        "type": "S3",
+        "tr": 9.3,
+        "w": 32.7,
+        "btu": 111000,
+        "dimensions": "500 × 290 × 290"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM115S4QC",
+        "type": "S4",
+        "tr": 9.3,
+        "w": 32.7,
+        "btu": 111600,
+        "dimensions": "505 × 300 × 300",
+        "code": " SM115-4QAI "
+      },
+      "copeland": {
+        "model": "ZR11M3-TWD",
+        "type": "S4",
+        "tr": 9.3,
+        "w": 32.7,
+        "btu": 111000,
+        "dimensions": "500 × 290 × 290"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM125S3QC",
+        "type": "S3",
+        "tr": 10,
+        "w": 35.2,
+        "btu": 120000,
+        "dimensions": "505 × 300 × 300",
+        "code": " SM125-3QAI"
+      },
+      "copeland": {
+        "model": "ZR12M3-TWC",
+        "type": "S3",
+        "tr": 10,
+        "w": 35.2,
+        "btu": 120000,
+        "dimensions": "500 × 290 × 290"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM125S4QC",
+        "type": "S4",
+        "tr": 10,
+        "w": 35.2,
+        "btu": 120000,
+        "dimensions": "505 × 300 × 300",
+        "code": " SM125-4QAI "
+      },
+      "copeland": {
+        "model": "ZR12M3-TWD",
+        "type": "S4",
+        "tr": 10,
+        "w": 35.2,
+        "btu": 120000,
+        "dimensions": "500 × 290 × 290"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM160T3CC",
+        "type": "S3",
+        "tr": 12.5,
+        "w": 44,
+        "btu": 150000,
+        "dimensions": "545 × 320 × 320",
+        "code": " SM160-3CBI"
+      },
+      "copeland": {
+        "model": "ZR16M3-TWC",
+        "type": "S3",
+        "tr": 12.5,
+        "w": 44,
+        "btu": 150000,
+        "dimensions": "540 × 310 × 310"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM160T4CC",
+        "type": "S4",
+        "tr": 12.5,
+        "w": 44,
+        "btu": 150000,
+        "dimensions": "545 × 320 × 320",
+        "code": " SM160-4CBI"
+      },
+      "copeland": {
+        "model": "ZR16M3-TWD",
+        "type": "S4",
+        "tr": 12.5,
+        "w": 44,
+        "btu": 150000,
+        "dimensions": "540 × 310 × 310"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM175S3QC",
+        "type": "S3",
+        "tr": 14,
+        "w": 49.2,
+        "btu": 168000,
+        "dimensions": "575 × 340 × 340",
+        "code": " SM175-3QAI"
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "SM175S4QC",
+        "type": "S4",
+        "tr": 14,
+        "w": 49.2,
+        "btu": 168000,
+        "dimensions": "575 × 340 × 340",
+        "code": " SM175-4QAI"
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "SM185S3QC",
+        "type": "S3",
+        "tr": 15,
+        "w": 52.8,
+        "btu": 180000,
+        "dimensions": "575 × 340 × 340",
+        "code": " SM185-3QAI"
+      },
+      "copeland": {
+        "model": "ZR19M3-TWC",
+        "type": "S3",
+        "tr": 15,
+        "w": 52.8,
+        "btu": 180000,
+        "dimensions": "570 × 330 × 330"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "SM185S4QC",
+        "type": "S4",
+        "tr": 15,
+        "w": 52.8,
+        "btu": 180000,
+        "dimensions": "575 × 340 × 340",
+        "code": " SM185-4QAI "
+      },
+      "copeland": {
+        "model": "ZR19M3-TWD",
+        "type": "S4",
+        "tr": 15,
+        "w": 52.8,
+        "btu": 180000,
+        "dimensions": "570 × 330 × 330"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "R22/R407Z"
+      },
+      "copeland": {}
+    }
+  ],
+  "MLZ": [
+    {
+      "danfoss": {
+        "model": "MLZ015",
+        "tr": 0.9,
+        "w": 3200,
+        "btu": 10800,
+        "dimensions": "379 × 165 mm",
+        "code": "MLZ015T4LP9"
+      },
+      "copeland": {
+        "model": "ZB15KCE-TFD",
+        "tr": 1,
+        "w": 3700,
+        "btu": 12000,
+        "dimensions": "382x241x241"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ019",
+        "tr": 1.1,
+        "w": 3900,
+        "btu": 13200.000000000002,
+        "dimensions": "379 × 165 mm",
+        "code": "MLZ019T4LP9"
+      },
+      "copeland": {
+        "model": "ZB19KCE-TFD",
+        "tr": 1.1,
+        "w": 3900,
+        "btu": 13200,
+        "dimensions": "369x242x242"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ021",
+        "tr": 1.4,
+        "w": 5100,
+        "btu": 16800,
+        "dimensions": "379 × 165 mm",
+        "code": "MLZ021T4LP9"
+      },
+      "copeland": {
+        "model": "ZB21KCE-TFD",
+        "tr": 1.4,
+        "w": 5050,
+        "btu": 16800,
+        "dimensions": "392-406x243-244x244"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ026",
+        "tr": 1.7,
+        "w": 5900,
+        "btu": 20400,
+        "dimensions": "430 × 185 mm",
+        "code": "MLZ026T4LP9"
+      },
+      "copeland": {
+        "model": "ZB26KCE-TFD",
+        "tr": 1.7,
+        "w": 5840,
+        "btu": 20400,
+        "dimensions": "406x243x244"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ030",
+        "tr": 1.9,
+        "w": 6700,
+        "btu": 22800,
+        "dimensions": "455 × 190 mm",
+        "code": "MLZ030T4LP9"
+      },
+      "copeland": {
+        "model": "ZB29KCE-TFD",
+        "tr": 1.9,
+        "w": 6620,
+        "btu": 22800,
+        "dimensions": "423x246x246"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ038",
+        "tr": 2.4,
+        "w": 8600,
+        "btu": 28800,
+        "dimensions": "480 × 200 mm",
+        "code": "MLZ038T4LP9"
+      },
+      "copeland": {
+        "model": "ZB38KCE-TFD",
+        "tr": 2.4,
+        "w": 8530,
+        "btu": 28800,
+        "dimensions": "438x242x242"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ045",
+        "tr": 2.9,
+        "w": 10200,
+        "btu": 34800,
+        "dimensions": "520 × 210 mm",
+        "code": "MLZ045T4LP9"
+      },
+      "copeland": {
+        "model": "ZB45KCE-TFD",
+        "tr": 3.4,
+        "w": 11900,
+        "btu": 40800,
+        "dimensions": "438-458x242x242"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ048",
+        "tr": 3.3,
+        "w": 11700,
+        "btu": 39600,
+        "dimensions": "540 × 215 mm",
+        "code": "MLZ048T4LP9"
+      },
+      "copeland": {
+        "model": "ZB48KCE-TFD",
+        "tr": 3.3,
+        "w": 11650,
+        "btu": 39600,
+        "dimensions": "480x246x284"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ058",
+        "tr": 3.8,
+        "w": 13400,
+        "btu": 45600,
+        "dimensions": "580 × 230 mm",
+        "code": "MLZ058T4LP9"
+      },
+      "copeland": {
+        "model": "ZB57KCE-TFD",
+        "tr": 3.8,
+        "w": 13200,
+        "btu": 45600,
+        "dimensions": "442x246-263x256-263"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ066",
+        "tr": 4.4,
+        "w": 15600,
+        "btu": 52800.00000000001,
+        "dimensions": "620 × 250 mm",
+        "code": "MLZ066T4LP9"
+      },
+      "copeland": {
+        "model": "ZB66KCE-TFD",
+        "tr": 4.3,
+        "w": 15100,
+        "btu": 51600,
+        "dimensions": "534x280x280"
+      }
+    },
+    {
+      "danfoss": {
+        "model": "MLZ076",
+        "tr": 5.2,
+        "w": 18400,
+        "btu": 62400,
+        "dimensions": "650 × 260 mm",
+        "code": "MLZ076T4LP9"
+      },
+      "copeland": {
+        "model": "ZB76KCE-TFD",
+        "tr": 5.1,
+        "w": 17850,
+        "btu": 61200,
+        "dimensions": "534x280x280"
+      }
+    }
+  ],
+  "DSH": [
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH090A4AL",
+        "tr": 7.5,
+        "w": 20048,
+        "btu": 68402,
+        "dimensions": "485 X 230 X 243",
+        "code": "DSH090A4AL"
+      },
+      "copeland": {
+        "model": "ZP90KCE-TFD",
+        "tr": 7.5,
+        "dimensions": "533 x 501 x 242"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH105A4AL",
+        "tr": 9,
+        "w": 23578,
+        "btu": 80449,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH105A4AL"
+      },
+      "copeland": {
+        "model": "ZP103KCE-TFD",
+        "tr": 9,
+        "dimensions": "534 x 501 x 242"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH120A4AL",
+        "tr": 10,
+        "w": 26787,
+        "btu": 91396,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH120A4AL"
+      },
+      "copeland": {
+        "model": "ZP120KCE-TFD",
+        "tr": 10,
+        "dimensions": "535 x 501 x 242"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH140A4AL",
+        "tr": 12,
+        "w": 30370,
+        "btu": 103621,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH140A4AL"
+      },
+      "copeland": {
+        "model": "ZP137KCE-TFD",
+        "tr": 12,
+        "dimensions": "536 x 501 x 242"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH161A3AL",
+        "tr": 13,
+        "w": 34894,
+        "btu": 119059,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH161A3AL"
+      },
+      "copeland": {
+        "model": "ZP154KCE-TF5",
+        "tr": 13.5,
+        "dimensions": "552 x 519 x 261"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH184A4AL",
+        "tr": 15,
+        "w": 39036,
+        "btu": 133191,
+        "dimensions": "558 X 230X 243",
+        "code": "DSH184A4AL"
+      },
+      "copeland": {
+        "model": "ZP182KCE-TF5",
+        "tr": 15,
+        "dimensions": "553 x 519 x 261"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH240A4AA* \r\nDSH240A4AB*",
+        "tr": 20,
+        "w": 52730,
+        "btu": 179920,
+        "dimensions": "653 X 371 X 266",
+        "code": "DSH240A4AA DSH240A4AB"
+      },
+      "copeland": {
+        "model": "ZP236KCE-TWD",
+        "tr": 20,
+        "dimensions": "694 x 403x 385"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH295A4AA* \r\nDSH295A4AB*",
+        "tr": 25,
+        "w": 64520,
+        "btu": 220149,
+        "dimensions": "653 X 371X 266",
+        "code": "DSH295A4AA DSH295A4AB"
+      },
+      "copeland": {
+        "model": "ZP295KCE-TWD2",
+        "tr": 25,
+        "dimensions": "725 x 448x392"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH381A4AA* \r\nDSH381A4AB*",
+        "tr": 30,
+        "w": 80707,
+        "btu": 275379,
+        "dimensions": "726 X 371 X 333",
+        "code": "DSH381A4AA DSH381A4AB"
+      },
+      "copeland": {
+        "model": "ZP385KCE-TWD2",
+        "tr": 30,
+        "dimensions": "726 x 448x392"
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH485A4AA* \r\nDSH485A4AB",
+        "tr": 40,
+        "w": 104687,
+        "btu": 357202,
+        "dimensions": "726 X 371 X 333",
+        "code": "DSH485A4AA DSH485A4AB"
+      },
+      "copeland": {
+        "model": " - ",
+        "tr": 40
+      }
+    },
+    {
+      "hz": 50,
+      "danfoss": {
+        "model": "DSH600A4AA* \r\nDSH600A4AB",
+        "tr": 50,
+        "w": 128864,
+        "btu": 439698,
+        "dimensions": "799 X 371 X 333",
+        "code": "DSH600A4AB"
+      },
+      "copeland": {
+        "model": " - ",
+        "tr": 50
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": " DSH090A3AL",
+        "tr": 7.5,
+        "w": 27271,
+        "btu": 93730,
+        "dimensions": "485 X 230 X 243",
+        "code": "DSH090A3AL"
+      },
+      "copeland": {
+        "model": "ZP90KCE-TF5 \r\nZP91KCE-TF5",
+        "tr": 7.5,
+        "dimensions": "533 x 501 x 242"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH105A3AL",
+        "tr": 9,
+        "w": 32279,
+        "btu": 110136,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH105A3AL"
+      },
+      "copeland": {
+        "model": "ZP103KCE-TF5",
+        "tr": 9,
+        "dimensions": "534 x 501 x 242"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH120A3AL",
+        "tr": 10,
+        "w": 36629,
+        "btu": 124977,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH120A3AL"
+      },
+      "copeland": {
+        "model": "ZP120KCE-TF5",
+        "tr": 10,
+        "dimensions": "535 x 501 x 242"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH140A3AL",
+        "tr": 12,
+        "w": 41510,
+        "btu": 141631,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH140A3AL"
+      },
+      "copeland": {
+        "model": "ZP137KCE-TF5",
+        "tr": 12,
+        "dimensions": "536 x 501 x 242"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH161A3AL",
+        "tr": 13,
+        "w": 47222,
+        "btu": 161122,
+        "dimensions": "542 X 230X 243",
+        "code": "DSH161A3AL"
+      },
+      "copeland": {
+        "model": "ZP154KCE-TF",
+        "tr": 13.5,
+        "dimensions": "552 x 519 x 261"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH184A3AL",
+        "tr": 15,
+        "w": 53157,
+        "btu": 181371,
+        "dimensions": "558 X 230X 243",
+        "code": "DSH184A3AL"
+      },
+      "copeland": {
+        "model": "ZP182KCE-TF5",
+        "tr": 15,
+        "dimensions": "553 x 519 x 261"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH240A3AA* \r\nDSH240A3AB*",
+        "tr": 20,
+        "w": 71760,
+        "btu": 244852,
+        "dimensions": "653 X 371 X 266",
+        "code": "DSH240A3AA DSH240A3AB"
+      },
+      "copeland": {
+        "model": "ZP236KCE-TW5",
+        "tr": 20,
+        "dimensions": "694 x 403x 385"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH295A3AA* \r\nDSH295A3AB*",
+        "tr": 25,
+        "w": 87610,
+        "btu": 298934,
+        "dimensions": "653 X 371X 266",
+        "code": "DSH295A3AA DSH295A3AB"
+      },
+      "copeland": {
+        "model": "ZP295KCE-TW5",
+        "tr": 25,
+        "dimensions": "725 x 448x392"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH381A3AA* \r\nDSH381A3AB*",
+        "tr": 30,
+        "w": 110116,
+        "btu": 375726,
+        "dimensions": "726 X 371 X 333",
+        "code": " DSH381A3AA DSH381A3AB"
+      },
+      "copeland": {
+        "model": "ZP385KCE-TW52",
+        "tr": 30,
+        "dimensions": "726 x 448x392"
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH485A3AA* \r\nDSH485A3AB",
+        "tr": 40,
+        "w": 143956,
+        "btu": 491192,
+        "dimensions": "726 X 371 X 333",
+        "code": "DSH485A3AA DSH485A3AB"
+      },
+      "copeland": {
+        "tr": 40
+      }
+    },
+    {
+      "hz": 60,
+      "danfoss": {
+        "model": "DSH600A3AA* \r\nDSH600A3AB",
+        "tr": 50,
+        "w": 175344,
+        "btu": 598291,
+        "dimensions": "799 X 371 X 333",
+        "code": "DSH600A3AA DSH600A3AB"
+      },
+      "copeland": {
+        "tr": 50
+      }
+    },
+    {
+      "danfoss": {
+        "model": " DSH090A4AL",
+        "tr": 7.5,
+        "w": 20048
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH105A4AL",
+        "tr": 9,
+        "w": 23578
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH120A4AL",
+        "tr": 10,
+        "w": 26787
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH140A4AL",
+        "tr": 12,
+        "w": 30370
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH161A3AL",
+        "tr": 13,
+        "w": 34894
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH184A4AL",
+        "tr": 15,
+        "w": 39036
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH240A4AA* \r\nDSH240A4AB*",
+        "tr": 20,
+        "w": 52730
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH295A4AA* \r\nDSH295A4AB*",
+        "tr": 25,
+        "w": 64520
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH381A4AA* \r\nDSH381A4AB*",
+        "tr": 30,
+        "w": 80707
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH485A4AA* \r\nDSH485A4AB",
+        "tr": 40,
+        "w": 104687
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH600A4AA* \r\nDSH600A4AB",
+        "tr": 50,
+        "w": 128864
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": " DSH090A3AL",
+        "tr": 7.5,
+        "w": 27271
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH105A3AL",
+        "tr": 9,
+        "w": 32279
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH120A3AL",
+        "tr": 10,
+        "w": 36629
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH140A3AL",
+        "tr": 12,
+        "w": 41510
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH161A3AL",
+        "tr": 13,
+        "w": 47222
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH184A3AL",
+        "tr": 15,
+        "w": 53157
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH240A3AA* \r\nDSH240A3AB*",
+        "tr": 20,
+        "w": 71760
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH295A3AA* \r\nDSH295A3AB*",
+        "tr": 25,
+        "w": 87610
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH381A3AA* \r\nDSH381A3AB*",
+        "tr": 30,
+        "w": 110116
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH485A3AA* \r\nDSH485A3AB",
+        "tr": 40,
+        "w": 143956
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "model": "DSH600A3AA* \r\nDSH600A3AB",
+        "tr": 50,
+        "w": 175344
+      },
+      "copeland": {}
+    }
+  ],
+  "MT_MTZ": [
+    {
+      "danfoss": {
+        "mt": "MT18",
+        "mtz": "MTZ18",
+        "capacity": 1.3
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "mt": "MT22",
+        "mtz": "MTZ22",
+        "capacity": 1.5
+      },
+      "copeland": {
+        "model": "CR22",
+        "capacity": 1.3875
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT28",
+        "mtz": "MTZ28",
+        "capacity": 1.9
+      },
+      "copeland": {
+        "model": "CR29",
+        "capacity": 2.02083
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT32",
+        "mtz": "MTZ32",
+        "capacity": 2.2
+      },
+      "copeland": {
+        "model": "CR30",
+        "capacity": 1.95833
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT36",
+        "mtz": "MTZ36",
+        "capacity": 2.5
+      },
+      "copeland": {
+        "model": "CR36",
+        "capacity": 2.28333
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT40",
+        "mtz": "MTZ40",
+        "capacity": 2.8
+      },
+      "copeland": {
+        "model": "CR42",
+        "capacity": 2.69583
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT44",
+        "mtz": "MTZ44",
+        "capacity": 3.1
+      },
+      "copeland": {
+        "model": "CR47",
+        "capacity": 3.13292
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT50",
+        "mtz": "MTZ50",
+        "capacity": 3.5
+      },
+      "copeland": {
+        "model": "CR53",
+        "capacity": 3.53633
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT56",
+        "mtz": "MTZ56",
+        "capacity": 3.9
+      },
+      "copeland": {
+        "model": "CR57",
+        "capacity": 3.8625
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT64",
+        "mtz": "MTZ64",
+        "capacity": 4.4
+      },
+      "copeland": {
+        "model": "CR62",
+        "capacity": 4.24875
+      }
+    },
+    {
+      "danfoss": {
+        "mt": "MT72",
+        "mtz": "MTZ72",
+        "capacity": 5
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "mt": "MT80",
+        "mtz": "MTZ80",
+        "capacity": 5.6
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "mt": "MT100",
+        "mtz": "MTZ100",
+        "capacity": 6.9
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "mt": "MT125",
+        "mtz": "MTZ125",
+        "capacity": 8.7
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "mt": "MT144",
+        "mtz": "MTZ144",
+        "capacity": 10
+      },
+      "copeland": {}
+    },
+    {
+      "danfoss": {
+        "mt": "MT160",
+        "mtz": "MTZ160",
+        "capacity": 11.1
+      },
+      "copeland": {}
+    }
+  ]
+}
