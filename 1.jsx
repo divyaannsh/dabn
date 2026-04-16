@@ -216,7 +216,21 @@ const App = () => {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
+        ignoreElements: (element) => {
+          // Ignore any elements that might be using complex modern CSS
+          const style = window.getComputedStyle(element);
+          return style.backdropFilter !== 'none' || style.filter.includes('blur');
+        },
+        onclone: (clonedDoc) => {
+          const allElements = clonedDoc.getElementsByTagName('*');
+          for (let i = 0; i < allElements.length; i++) {
+            const el = allElements[i];
+            // Force replace any modern CSS that html2canvas hates
+            el.style.backdropFilter = 'none';
+            el.style.filter = 'none';
+          }
+        }
       });
       
       const imgData = canvas.toDataURL('image/png');
