@@ -1,4 +1,6 @@
-import React, { useState, useMemo, useEffect, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, Suspense, useRef } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { 
   Search, 
   ChevronRight, 
@@ -203,6 +205,32 @@ const App = () => {
   const [explainMode, setExplainMode] = useState(false);
   const [activeUseCase, setActiveUseCase] = useState(null);
   const [scrollY, setScrollY] = useState(0);
+  const comparisonRef = useRef(null);
+
+  const handleExportPDF = async () => {
+    if (!comparisonRef.current) return;
+    
+    try {
+      const element = comparisonRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff"
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Danfoss_Comparison_${filteredData[selectedModel]?.danfoss?.model || 'Report'}.pdf`);
+    } catch (error) {
+      console.error("PDF Export failed:", error);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -563,7 +591,10 @@ const App = () => {
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                <button className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm hover:border-red-200 hover:text-red-600 transition-all">
+                <button 
+                  onClick={handleExportPDF}
+                  className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm hover:border-red-200 hover:text-red-600 transition-all"
+                >
                   <Download className="w-3.5 h-3.5" />
                   Export PDF
                 </button>
@@ -633,151 +664,153 @@ const App = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     key={selectedModel}
                   >
-                    <div className="grid md:grid-cols-2 gap-4 mb-6">
-                      <Card className="p-4 bg-green-50/50 border-green-100">
-                        <div className="flex items-center gap-2 mb-2 text-green-800">
-                          <Check className="w-4 h-4" />
-                          <h4 className="font-bold text-sm">Final Verdict</h4>
+                    <div ref={comparisonRef}>
+                      <div className="grid md:grid-cols-2 gap-4 mb-6">
+                        <Card className="p-4 bg-green-50/50 border-green-100">
+                          <div className="flex items-center gap-2 mb-2 text-green-800">
+                            <Check className="w-4 h-4" />
+                            <h4 className="font-bold text-sm">Final Verdict</h4>
+                          </div>
+                          <p className="text-xs text-green-700 leading-relaxed">
+                            Danfoss outperforms Copeland in {currentVerdict?.wins}/{currentVerdict?.total} key technical metrics for this specific selection.
+                          </p>
+                        </Card>
+                        <Card className="p-4 bg-red-50/50 border-red-100">
+                          <div className="flex items-center gap-2 mb-2 text-red-800">
+                            <Zap className="w-4 h-4" />
+                            <h4 className="font-bold text-sm">Smart Suggestion</h4>
+                          </div>
+                          <p className="text-xs text-red-700 leading-relaxed">
+                            Ideal for {filteredData[selectedModel].category === 'MLZ' ? 'Refrigeration' : 'High-Ambient AC'} use cases.
+                          </p>
+                        </Card>
+                      </div>
+
+                      <Card className="h-full border-slate-200">
+                        <div className="bg-red-600 p-6 text-white flex justify-between items-center">
+                          <div>
+                            <p className="text-red-200 text-xs font-bold uppercase tracking-widest mb-1">Detailed Technical View</p>
+                            <h4 className="text-2xl font-bold">
+                              {filteredData[selectedModel].danfoss?.model || filteredData[selectedModel].danfoss?.mt}
+                            </h4>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <p className="text-[10px] text-red-100 uppercase font-bold">Match Score</p>
+                              <p className="text-2xl font-black">{currentVerdict?.score}%</p>
+                            </div>
+                            <ArrowRightLeft className="w-8 h-8 text-white/30" />
+                          </div>
                         </div>
-                        <p className="text-xs text-green-700 leading-relaxed">
-                          Danfoss outperforms Copeland in {currentVerdict?.wins}/{currentVerdict?.total} key technical metrics for this specific selection.
-                        </p>
-                      </Card>
-                      <Card className="p-4 bg-red-50/50 border-red-100">
-                        <div className="flex items-center gap-2 mb-2 text-red-800">
-                          <Zap className="w-4 h-4" />
-                          <h4 className="font-bold text-sm">Smart Suggestion</h4>
+                        
+                        <div className="p-8">
+                          <div className="grid grid-cols-12 mb-2 bg-yellow-400 p-3 rounded-t-xl border-x border-t border-slate-300 sticky top-0 z-10 shadow-sm">
+                            <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider flex items-center">Technical Specs</div>
+                            <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Danfoss Performance</div>
+                            <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Copeland Equivalent</div>
+                          </div>
+
+                          <div className="bg-white rounded-b-xl overflow-hidden border border-slate-300 shadow-sm">
+                            {filteredData[selectedModel].category === "MT_MTZ" ? (
+                              <>
+                                <ComparisonRow 
+                                  label="Model Variant" 
+                                  danfossValue={`MT: ${filteredData[selectedModel].danfoss?.mt} / MTZ: ${filteredData[selectedModel].danfoss?.mtz}`} 
+                                  copelandValue={filteredData[selectedModel].copeland?.model} 
+                                  icon={Maximize2}
+                                  tooltip="Danfoss MT/MTZ offers flexibility for various refrigeration oils."
+                                  explanation={explainMode ? "Different variants optimized for specific refrigerants and oil types." : null}
+                                />
+                                <ComparisonRow 
+                                  label="Capacity (TR)" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.capacity} 
+                                  copelandValue={filteredData[selectedModel].copeland?.capacity} 
+                                  icon={Zap}
+                                  tooltip="TR = Tons of Refrigeration. 1 TR = 3.5 kW."
+                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.capacity, filteredData[selectedModel].copeland?.capacity)}
+                                  explanation={explainMode ? "Tonnage Refrigeration (TR) defines the cooling power. Higher is better for larger spaces." : null}
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <ComparisonRow 
+                                  label="Model Number" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.model} 
+                                  copelandValue={filteredData[selectedModel].copeland?.model} 
+                                  icon={Maximize2}
+                                  isSubHeader={true}
+                                />
+                                {filteredData[selectedModel].danfoss?.type && (
+                                  <ComparisonRow 
+                                    label="Compressor Type" 
+                                    danfossValue={filteredData[selectedModel].danfoss?.type} 
+                                    copelandValue={filteredData[selectedModel].copeland?.type} 
+                                    icon={Info}
+                                    tooltip="Mechanical architecture: S3 vs S4 optimization."
+                                    explanation={explainMode ? "Defines the internal mechanical architecture of the scroll." : null}
+                                  />
+                                )}
+                                {filteredData[selectedModel].category === "DSH" && (
+                                  <ComparisonRow 
+                                    label="Frequency (Hz)" 
+                                    danfossValue={`${filteredData[selectedModel].hz} Hz`} 
+                                    copelandValue="-" 
+                                    icon={Info}
+                                    tooltip="Operational frequency standard for regional power grids."
+                                    explanation={explainMode ? "Standard electrical frequency for the application region." : null}
+                                  />
+                                )}
+                                <ComparisonRow 
+                                  label="Capacity (TR)" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.tr} 
+                                  copelandValue={filteredData[selectedModel].copeland?.tr} 
+                                  icon={Zap}
+                                  tooltip="Cooling capacity in tons. 1 TR = 12,000 BTU/hr."
+                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.tr, filteredData[selectedModel].copeland?.tr)}
+                                  explanation={explainMode ? "Total cooling capacity in Tons of Refrigeration." : null}
+                                />
+                                <ComparisonRow 
+                                  label="Cooling (W)" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.w} 
+                                  copelandValue={filteredData[selectedModel].copeland?.w} 
+                                  icon={CheckCircle2}
+                                  tooltip="Wattage defines total electrical cooling power."
+                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.w, filteredData[selectedModel].copeland?.w)}
+                                  explanation={explainMode ? "Cooling power measured in Watts. Higher values indicate more cooling energy." : null}
+                                />
+                                <ComparisonRow 
+                                  label="Cooling (Btu/hr)" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.btu} 
+                                  copelandValue={filteredData[selectedModel].copeland?.btu} 
+                                  icon={CheckCircle2}
+                                  tooltip="BTU = British Thermal Units. Standard US cooling metric."
+                                  isBetter={isBetter(filteredData[selectedModel].danfoss?.btu, filteredData[selectedModel].copeland?.btu)}
+                                  explanation={explainMode ? "British Thermal Units per hour. Standard unit for cooling capacity." : null}
+                                />
+                                <ComparisonRow 
+                                  label="Dimensions (mm)" 
+                                  danfossValue={filteredData[selectedModel].danfoss?.dimensions} 
+                                  copelandValue={filteredData[selectedModel].copeland?.dimensions} 
+                                  icon={Maximize2}
+                                  tooltip="Physical footprint. Smaller allows for easier retrofitting."
+                                  explanation={explainMode ? "Physical size. Smaller dimensions often allow for more flexible installation." : null}
+                                />
+                                {filteredData[selectedModel].danfoss?.code && (
+                                  <ComparisonRow 
+                                    label="Ordering Code" 
+                                    danfossValue={filteredData[selectedModel].danfoss?.code} 
+                                    copelandValue="-" 
+                                    icon={Filter}
+                                    tooltip="Use this exact code for procurement and ordering."
+                                    explanation={explainMode ? "Unique identifier for placing orders with Danfoss." : null}
+                                  />
+                                )}
+                              </>
+                            )}
+                          </div>
                         </div>
-                        <p className="text-xs text-red-700 leading-relaxed">
-                          Ideal for {filteredData[selectedModel].category === 'MLZ' ? 'Refrigeration' : 'High-Ambient AC'} use cases.
-                        </p>
                       </Card>
                     </div>
-
-                    <Card className="h-full border-slate-200">
-                      <div className="bg-red-600 p-6 text-white flex justify-between items-center">
-                        <div>
-                          <p className="text-red-200 text-xs font-bold uppercase tracking-widest mb-1">Detailed Technical View</p>
-                          <h4 className="text-2xl font-bold">
-                            {filteredData[selectedModel].danfoss?.model || filteredData[selectedModel].danfoss?.mt}
-                          </h4>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="text-[10px] text-red-100 uppercase font-bold">Match Score</p>
-                            <p className="text-2xl font-black">{currentVerdict?.score}%</p>
-                          </div>
-                          <ArrowRightLeft className="w-8 h-8 text-white/30" />
-                        </div>
-                      </div>
-                      
-                      <div className="p-8">
-                        <div className="grid grid-cols-12 mb-2 bg-yellow-400 p-3 rounded-t-xl border-x border-t border-slate-300 sticky top-0 z-10 shadow-sm">
-                          <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider flex items-center">Technical Specs</div>
-                          <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Danfoss Performance</div>
-                          <div className="col-span-4 text-[10px] font-black text-slate-900 uppercase tracking-wider border-l border-slate-600/20 px-3">Copeland Equivalent</div>
-                        </div>
-
-                        <div className="bg-white rounded-b-xl overflow-hidden border border-slate-300 shadow-sm">
-                          {filteredData[selectedModel].category === "MT_MTZ" ? (
-                            <>
-                              <ComparisonRow 
-                                label="Model Variant" 
-                                danfossValue={`MT: ${filteredData[selectedModel].danfoss?.mt} / MTZ: ${filteredData[selectedModel].danfoss?.mtz}`} 
-                                copelandValue={filteredData[selectedModel].copeland?.model} 
-                                icon={Maximize2}
-                                tooltip="Danfoss MT/MTZ offers flexibility for various refrigeration oils."
-                                explanation={explainMode ? "Different variants optimized for specific refrigerants and oil types." : null}
-                              />
-                              <ComparisonRow 
-                                label="Capacity (TR)" 
-                                danfossValue={filteredData[selectedModel].danfoss?.capacity} 
-                                copelandValue={filteredData[selectedModel].copeland?.capacity} 
-                                icon={Zap}
-                                tooltip="TR = Tons of Refrigeration. 1 TR = 3.5 kW."
-                                isBetter={isBetter(filteredData[selectedModel].danfoss?.capacity, filteredData[selectedModel].copeland?.capacity)}
-                                explanation={explainMode ? "Tonnage Refrigeration (TR) defines the cooling power. Higher is better for larger spaces." : null}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <ComparisonRow 
-                                label="Model Number" 
-                                danfossValue={filteredData[selectedModel].danfoss?.model} 
-                                copelandValue={filteredData[selectedModel].copeland?.model} 
-                                icon={Maximize2}
-                                isSubHeader={true}
-                              />
-                              {filteredData[selectedModel].danfoss?.type && (
-                                <ComparisonRow 
-                                  label="Compressor Type" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.type} 
-                                  copelandValue={filteredData[selectedModel].copeland?.type} 
-                                  icon={Info}
-                                  tooltip="Mechanical architecture: S3 vs S4 optimization."
-                                  explanation={explainMode ? "Defines the internal mechanical architecture of the scroll." : null}
-                                />
-                              )}
-                              {filteredData[selectedModel].category === "DSH" && (
-                                <ComparisonRow 
-                                  label="Frequency (Hz)" 
-                                  danfossValue={`${filteredData[selectedModel].hz} Hz`} 
-                                  copelandValue="-" 
-                                  icon={Info}
-                                  tooltip="Operational frequency standard for regional power grids."
-                                  explanation={explainMode ? "Standard electrical frequency for the application region." : null}
-                                />
-                              )}
-                              <ComparisonRow 
-                                label="Capacity (TR)" 
-                                danfossValue={filteredData[selectedModel].danfoss?.tr} 
-                                copelandValue={filteredData[selectedModel].copeland?.tr} 
-                                icon={Zap}
-                                tooltip="Cooling capacity in tons. 1 TR = 12,000 BTU/hr."
-                                isBetter={isBetter(filteredData[selectedModel].danfoss?.tr, filteredData[selectedModel].copeland?.tr)}
-                                explanation={explainMode ? "Total cooling capacity in Tons of Refrigeration." : null}
-                              />
-                              <ComparisonRow 
-                                label="Cooling (W)" 
-                                danfossValue={filteredData[selectedModel].danfoss?.w} 
-                                copelandValue={filteredData[selectedModel].copeland?.w} 
-                                icon={CheckCircle2}
-                                tooltip="Wattage defines total electrical cooling power."
-                                isBetter={isBetter(filteredData[selectedModel].danfoss?.w, filteredData[selectedModel].copeland?.w)}
-                                explanation={explainMode ? "Cooling power measured in Watts. Higher values indicate more cooling energy." : null}
-                              />
-                              <ComparisonRow 
-                                label="Cooling (Btu/hr)" 
-                                danfossValue={filteredData[selectedModel].danfoss?.btu} 
-                                copelandValue={filteredData[selectedModel].copeland?.btu} 
-                                icon={CheckCircle2}
-                                tooltip="BTU = British Thermal Units. Standard US cooling metric."
-                                isBetter={isBetter(filteredData[selectedModel].danfoss?.btu, filteredData[selectedModel].copeland?.btu)}
-                                explanation={explainMode ? "British Thermal Units per hour. Standard unit for cooling capacity." : null}
-                              />
-                              <ComparisonRow 
-                                label="Dimensions (mm)" 
-                                danfossValue={filteredData[selectedModel].danfoss?.dimensions} 
-                                copelandValue={filteredData[selectedModel].copeland?.dimensions} 
-                                icon={Maximize2}
-                                tooltip="Physical footprint. Smaller allows for easier retrofitting."
-                                explanation={explainMode ? "Physical size. Smaller dimensions often allow for more flexible installation." : null}
-                              />
-                              {filteredData[selectedModel].danfoss?.code && (
-                                <ComparisonRow 
-                                  label="Ordering Code" 
-                                  danfossValue={filteredData[selectedModel].danfoss?.code} 
-                                  copelandValue="-" 
-                                  icon={Filter}
-                                  tooltip="Use this exact code for procurement and ordering."
-                                  explanation={explainMode ? "Unique identifier for placing orders with Danfoss." : null}
-                                />
-                              )}
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </Card>
                   </motion.div>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center bg-white/40 backdrop-blur-2xl border-2 border-dashed border-white/40 p-12 text-center rounded-2xl">
